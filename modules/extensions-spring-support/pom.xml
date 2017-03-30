@@ -34,6 +34,11 @@
         </dependency>
         <dependency>
             <groupId>org.mule.runtime</groupId>
+            <artifactId>mule-module-extensions-soap-support</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.runtime</groupId>
             <artifactId>mule-core</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -149,6 +154,12 @@
         <dependency>
             <groupId>org.mule.tests</groupId>
             <artifactId>mule-petstore-extension</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.tests</groupId>
+            <artifactId>mule-soap-extension</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>

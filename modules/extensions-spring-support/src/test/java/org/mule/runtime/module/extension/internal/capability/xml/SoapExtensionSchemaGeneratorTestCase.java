@@ -13,7 +13,10 @@ import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mule.runtime.core.config.MuleManifest.getProductVersion;
 import static org.mule.runtime.core.util.IOUtils.getResourceAsString;
+import static org.mule.runtime.module.extension.internal.loader.java.JavaExtensionModelLoader.TYPE_PROPERTY_NAME;
+import static org.mule.runtime.module.extension.internal.loader.java.JavaExtensionModelLoader.VERSION;
 import static org.mule.test.module.extension.internal.util.ExtensionsTestUtils.compareXML;
 import org.mule.runtime.api.dsl.DslResolvingContext;
 import org.mule.runtime.api.meta.model.ExtensionModel;
@@ -23,23 +26,10 @@ import org.mule.runtime.core.api.registry.ServiceRegistry;
 import org.mule.runtime.extension.api.loader.DeclarationEnricher;
 import org.mule.runtime.module.extension.internal.capability.xml.schema.SchemaGenerator;
 import org.mule.runtime.module.extension.internal.loader.enricher.JavaXmlDeclarationEnricher;
-import org.mule.runtime.module.extension.internal.runtime.connectivity.basic.GlobalInnerPojoConnector;
-import org.mule.runtime.module.extension.internal.runtime.connectivity.basic.GlobalPojoConnector;
-import org.mule.runtime.module.extension.internal.runtime.connectivity.basic.ListConnector;
-import org.mule.runtime.module.extension.internal.runtime.connectivity.basic.MapConnector;
-import org.mule.runtime.module.extension.internal.runtime.connectivity.basic.StringListConnector;
-import org.mule.runtime.module.extension.internal.runtime.connectivity.basic.TestConnector;
-import org.mule.runtime.module.extension.internal.util.MuleExtensionUtils;
+import org.mule.runtime.module.extension.soap.internal.loader.SoapExtensionModelLoader;
 import org.mule.tck.junit4.AbstractMuleTestCase;
 import org.mule.tck.size.SmallTest;
-import org.mule.test.heisenberg.extension.HeisenbergExtension;
-import org.mule.test.marvel.MarvelExtension;
-import org.mule.test.metadata.extension.MetadataExtension;
-import org.mule.test.petstore.extension.PetStoreConnector;
 import org.mule.test.soap.extension.SoapConnectExtension;
-import org.mule.test.subtypes.extension.SubTypesMappingConnector;
-import org.mule.test.transactional.TransactionalExtension;
-import org.mule.test.vegan.extension.VeganExtension;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -57,7 +47,7 @@ import org.junit.runners.Parameterized;
 
 @SmallTest
 @RunWith(Parameterized.class)
-public class SchemaGeneratorTestCase extends AbstractMuleTestCase {
+public class SoapExtensionSchemaGeneratorTestCase extends AbstractMuleTestCase {
 
   static final Map<String, ExtensionModel> extensionModels = new HashMap<>();
 
@@ -73,7 +63,7 @@ public class SchemaGeneratorTestCase extends AbstractMuleTestCase {
 
   @Parameterized.Parameters(name = "{1}")
   public static Collection<Object[]> data() {
-    final ClassLoader classLoader = SchemaGeneratorTestCase.class.getClassLoader();
+    final ClassLoader classLoader = SoapExtensionSchemaGeneratorTestCase.class.getClassLoader();
     final ServiceRegistry serviceRegistry = mock(ServiceRegistry.class);
     when(serviceRegistry.lookupProviders(DeclarationEnricher.class, classLoader))
         .thenReturn(asList(new JavaXmlDeclarationEnricher()));
@@ -81,24 +71,12 @@ public class SchemaGeneratorTestCase extends AbstractMuleTestCase {
     final Map<Class<?>, String> extensions = new LinkedHashMap<Class<?>, String>() {
 
       {
-        put(MapConnector.class, "map.xsd");
-        put(ListConnector.class, "list.xsd");
-        put(TestConnector.class, "basic.xsd");
-        put(StringListConnector.class, "string-list.xsd");
-        put(GlobalPojoConnector.class, "global-pojo.xsd");
-        put(GlobalInnerPojoConnector.class, "global-inner-pojo.xsd");
-        put(VeganExtension.class, "vegan.xsd");
-        put(PetStoreConnector.class, "petstore.xsd");
-        put(MetadataExtension.class, "metadata.xsd");
-        put(HeisenbergExtension.class, "heisenberg.xsd");
-        put(TransactionalExtension.class, "tx-ext.xsd");
-        put(SubTypesMappingConnector.class, "subtypes.xsd");
-        put(MarvelExtension.class, "marvel.xsd");
+        put(SoapConnectExtension.class, "soap.xsd");
       }
     };
 
     Function<Class<?>, ExtensionModel> createExtensionModel = extension -> {
-      ExtensionModel model = MuleExtensionUtils.loadExtension(extension);
+      ExtensionModel model = loadSoapExtension(extension, new HashMap<>());
 
       if (extensionModels.put(model.getName(), model) != null) {
         throw new IllegalArgumentException(format("Extension names must be unique. Name [%s] for extension [%s] was already used",
@@ -122,7 +100,6 @@ public class SchemaGeneratorTestCase extends AbstractMuleTestCase {
   @Test
   public void generate() throws Exception {
     XmlDslModel languageModel = extensionUnderTest.getXmlDslModel();
-
     String schema = generator.generate(extensionUnderTest, languageModel, new SchemaTestDslContext());
     compareXML(expectedSchema, schema);
   }
@@ -145,4 +122,9 @@ public class SchemaGeneratorTestCase extends AbstractMuleTestCase {
     }
   }
 
+  public static ExtensionModel loadSoapExtension(Class<?> clazz, Map<String, Object> params) {
+    params.put(TYPE_PROPERTY_NAME, clazz.getName());
+    params.put(VERSION, getProductVersion());
+    return new SoapExtensionModelLoader().loadExtensionModel(clazz.getClassLoader(), params);
+  }
 }

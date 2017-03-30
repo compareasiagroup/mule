@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:soap="http://www.mulesoft.org/schema/mule/soap"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+               http://www.mulesoft.org/schema/mule/soap http://www.mulesoft.org/schema/mule/soap/current/mule-soap.xsd">
+
+
+    <soap:config name="configuration">
+        <soap:connection uno="asd" dos="asdads"/>
+    </soap:config>
+
+    <flow name="runSoap">
+        <soap:invoke operation="Operation" service="Service1" request="#[payload]"/>
+    </flow>
+
+</mule>

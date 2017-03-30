@@ -11,7 +11,6 @@ import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
-
 import org.mule.runtime.api.el.ExpressionExecutor;
 import org.mule.runtime.api.exception.MuleException;
 import org.mule.runtime.api.scheduler.Scheduler;
@@ -19,6 +18,7 @@ import org.mule.runtime.core.api.MuleContext;
 import org.mule.runtime.core.api.registry.MuleRegistry;
 import org.mule.runtime.core.config.builders.AbstractConfigurationBuilder;
 import org.mule.service.http.api.HttpService;
+import org.mule.services.soap.SoapServiceImplementation;
 import org.mule.tck.SimpleUnitTestSupportSchedulerService;
 
 import com.mulesoft.weave.el.WeaveExpressionExecutor;
@@ -65,6 +65,10 @@ public class TestServicesConfigurationBuilder extends AbstractConfigurationBuild
 
     if (mockHttpService) {
       registry.registerObject(MOCK_HTTP_SERVICE, mock(HttpService.class));
+    }
+
+    if (mockHttpService) {
+      registry.registerObject("soapService", new SoapServiceImplementation(mock(HttpService.class)));
     }
   }
 

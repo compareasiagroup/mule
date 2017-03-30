@@ -8,6 +8,7 @@ package org.mule.runtime.module.extension.internal.loader.java.type;
 
 import org.mule.runtime.extension.api.annotation.Extension;
 import org.mule.runtime.module.extension.internal.loader.java.type.runtime.ExtensionTypeWrapper;
+import org.mule.runtime.module.extension.internal.loader.java.type.runtime.SoapExtensionTypeWrapper;
 
 import javax.lang.model.element.TypeElement;
 
@@ -26,5 +27,9 @@ public class ExtensionTypeFactory {
    */
   public static ExtensionElement getExtensionType(Class<?> extensionClass) {
     return new ExtensionTypeWrapper<>(extensionClass);
+  }
+
+  public static SoapExtensionTypeWrapper getSoapExtensionType(Class<?> extensionType) {
+    return new SoapExtensionTypeWrapper<>(extensionType);
   }
 }

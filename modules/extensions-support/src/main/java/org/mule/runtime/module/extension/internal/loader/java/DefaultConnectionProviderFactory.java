@@ -22,7 +22,7 @@ import org.mule.runtime.extension.api.exception.IllegalConnectionProviderModelDe
  * @param <C> the generic type for the connections that the created {@link ConnectionProvider providers} produce
  * @since 4.0
  */
-final class DefaultConnectionProviderFactory<C> implements ConnectionProviderFactory<C> {
+public final class DefaultConnectionProviderFactory<C> implements ConnectionProviderFactory<C> {
 
   private final Class<? extends ConnectionProvider> providerClass;
   private final ClassLoader extensionClassLoader;
@@ -35,7 +35,7 @@ final class DefaultConnectionProviderFactory<C> implements ConnectionProviderFac
    * @throws IllegalModelDefinitionException if {@code providerClass} doesn't implement the {@link ConnectionProvider} interface
    * @throws IllegalArgumentException if {@code providerClass} is not an instantiable type
    */
-  DefaultConnectionProviderFactory(Class<?> providerClass, ClassLoader extensionClassLoader) {
+  public DefaultConnectionProviderFactory(Class<?> providerClass, ClassLoader extensionClassLoader) {
     this.extensionClassLoader = extensionClassLoader;
     if (!ConnectionProvider.class.isAssignableFrom(providerClass)) {
       throw new IllegalConnectionProviderModelDefinitionException(String

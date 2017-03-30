@@ -23,6 +23,7 @@
         <module>transactional-extension</module>
         <module>vegan-extension</module>
         <module>subtypes-extension</module>
+        <module>mule-soap-extension</module>
     </modules>
 
     <dependencies>

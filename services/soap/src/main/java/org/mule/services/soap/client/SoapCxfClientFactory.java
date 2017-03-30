@@ -42,14 +42,19 @@ public class SoapCxfClientFactory implements SoapClientFactory {
     WsdlIntrospecter introspecter = getIntrospecter(config);
     XmlTypeLoader xmlTypeLoader = new XmlTypeLoader(introspecter.getSchemas());
     Client client = CxfClientProvider.getClient(config);
-    MessageDispatcher dispatcher =
-        createDispatcher(config.getAddress() != null ? config.getAddress() : findAddress(introspecter));
     return new SoapCxfClient(client,
                              introspecter,
                              xmlTypeLoader,
-                             dispatcher,
+                             getMessageDispatcher(config, introspecter),
                              config.getVersion(),
                              config.isMtomEnabled());
+  }
+
+  private MessageDispatcher getMessageDispatcher(SoapClientConfiguration config, WsdlIntrospecter introspecter) throws ConnectionException {
+    if (config.getDispatcher() != null) {
+      return config.getDispatcher();
+    }
+    return createDispatcher(config.getAddress() != null ? config.getAddress() : findAddress(introspecter));
   }
 
   private WsdlIntrospecter getIntrospecter(SoapClientConfiguration config) throws ConnectionException {

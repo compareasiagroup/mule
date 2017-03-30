@@ -62,7 +62,6 @@ abstract class ComponentWrapper extends TypeWrapper implements ComponentElement 
    */
   @Override
   public List<ConnectionProviderElement> getConnectionProviders() {
-
     final Optional<ConnectionProviders> optionalProviders = this.getAnnotation(ConnectionProviders.class);
     if (optionalProviders.isPresent()) {
       return stream(optionalProviders.get().value()).map(ConnectionProviderTypeWrapper::new).collect(toList());

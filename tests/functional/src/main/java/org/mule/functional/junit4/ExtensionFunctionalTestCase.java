@@ -18,8 +18,10 @@ import org.mule.runtime.core.api.MuleContext;
 import org.mule.runtime.core.api.config.ConfigurationBuilder;
 import org.mule.runtime.core.api.extension.ExtensionManager;
 import org.mule.runtime.core.config.builders.AbstractConfigurationBuilder;
+import org.mule.runtime.extension.api.loader.ExtensionModelLoader;
 import org.mule.runtime.extension.api.resources.GeneratedResource;
 import org.mule.runtime.extension.api.resources.ResourcesGenerator;
+import org.mule.runtime.module.extension.internal.loader.java.JavaExtensionModelLoader;
 import org.mule.runtime.module.extension.internal.manager.DefaultExtensionManager;
 import org.mule.test.runner.infrastructure.ExtensionsTestInfrastructureDiscoverer;
 
@@ -88,12 +90,17 @@ public abstract class ExtensionFunctionalTestCase extends FunctionalTestCase {
     initialiseIfNeeded(extensionManager, muleContext);
 
     ExtensionsTestInfrastructureDiscoverer extensionsTestInfrastructureDiscoverer =
-        new ExtensionsTestInfrastructureDiscoverer(extensionManager);
-    extensionsTestInfrastructureDiscoverer.discoverExtensions(getAnnotatedExtensionClasses());
+        new ExtensionsTestInfrastructureDiscoverer(extensionManager, getExtensionModelLoader());
+
+    discoverExtensions(extensionsTestInfrastructureDiscoverer);
 
     generateResourcesAndAddToClasspath(generatedResourcesDirectory,
                                        copyOf(extensionsTestInfrastructureDiscoverer
                                            .generateDslResources(generatedResourcesDirectory)));
+  }
+
+  protected void discoverExtensions(ExtensionsTestInfrastructureDiscoverer extensionsTestInfrastructureDiscoverer) {
+    extensionsTestInfrastructureDiscoverer.discoverExtensions(getAnnotatedExtensionClasses());
   }
 
   private void generateResourcesAndAddToClasspath(File generatedResourcesDirectory, List<GeneratedResource> resources)
@@ -151,4 +158,7 @@ public abstract class ExtensionFunctionalTestCase extends FunctionalTestCase {
     return null;
   }
 
+  protected ExtensionModelLoader getExtensionModelLoader() {
+    return new JavaExtensionModelLoader();
+  }
 }

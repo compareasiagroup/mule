@@ -95,7 +95,6 @@ public class SoapCxfClient implements SoapClient {
                 MessageDispatcher dispatcher,
                 SoapVersion version,
                 boolean isMtom) {
-
     this.client = client;
     this.introspecter = introspecter;
     this.loader = typeLoader;
