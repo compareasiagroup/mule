@@ -40,7 +40,7 @@ public class SocketTimingExperimentTestCase extends AbstractMuleTestCase
         }
         catch (Exception e)
         {
-            logger.info(String.valueOf(e));
+            logger.warn("Exception: ",e);
         }
         try
         {
@@ -49,7 +49,7 @@ public class SocketTimingExperimentTestCase extends AbstractMuleTestCase
         }
         catch (Exception e)
         {
-            logger.info(String.valueOf(e));
+            logger.warn("Exception: ", e);
         }
     }
 

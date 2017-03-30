@@ -10,7 +10,11 @@ import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.rules.DisableOnDebug;
 import org.junit.rules.TestName;
 import org.junit.rules.TestRule;
@@ -25,7 +29,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assume.assumeThat;
 

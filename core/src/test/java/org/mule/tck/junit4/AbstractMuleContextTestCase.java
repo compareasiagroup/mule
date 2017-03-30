@@ -330,7 +330,7 @@ public abstract class AbstractMuleContextTestCase extends AbstractMuleTestCase
                 catch (IllegalStateException e)
                 {
                     // Ignore
-                    logger.warn(e.getMessage());
+                    logger.warn(e + " : " + e.getMessage());
                 }
 
 
