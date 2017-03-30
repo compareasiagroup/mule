@@ -9,6 +9,7 @@ package org.mule.runtime.core.internal.streaming.object;
 import org.mule.runtime.api.streaming.Sized;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 /**
  * A buffer which provides concurrent random access to the entirety
@@ -30,7 +31,9 @@ interface ObjectStreamBuffer<T> extends Sized {
    * @return the item
    * @throws NoSuchElementException if there's no item at that position
    */
-  T get(long position);
+  Optional<Bucket<T>> getBucketFor(Position position);
+
+  Position toPosition(long position);
 
   /**
    * @param position a position in the stream

@@ -101,7 +101,6 @@ public class CursorIteratorProviderTestCase extends AbstractObjectStreamingTestC
     });
   }
 
-
   @Test
   @Description("Consume the stream, go back to two different positions and consume again (each)")
   public void randomSeekWithOneOpenCursor() throws Exception {

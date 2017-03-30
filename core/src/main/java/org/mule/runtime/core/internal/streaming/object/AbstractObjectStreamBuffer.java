@@ -7,10 +7,14 @@
 package org.mule.runtime.core.internal.streaming.object;
 
 import static org.mule.runtime.api.util.Preconditions.checkState;
+import static org.mule.runtime.core.util.ConcurrencyUtils.safeUnlock;
+import static org.mule.runtime.core.util.ConcurrencyUtils.withLock;
 import static org.mule.runtime.core.util.FunctionalUtils.safely;
 import static org.slf4j.LoggerFactory.getLogger;
 import org.mule.runtime.core.util.func.CheckedRunnable;
+import org.mule.runtime.core.util.func.CheckedSupplier;
 
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -30,16 +34,16 @@ public abstract class AbstractObjectStreamBuffer<T> implements ObjectStreamBuffe
 
   private final AtomicBoolean closed = new AtomicBoolean(false);
   private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
-  protected final Lock readLock = readWriteLock.readLock();
-  protected final Lock writeLock = readWriteLock.writeLock();
+  private final Lock readLock = readWriteLock.readLock();
+  private final Lock writeLock = readWriteLock.writeLock();
 
   @Override
-  public final T get(long position) {
+  public Optional<Bucket<T>> getBucketFor(Position position) {
     checkNotClosed();
     return doGet(position);
   }
 
-  protected abstract T doGet(long position);
+  protected abstract Optional<Bucket<T>> doGet(Position position);
 
   @Override
   public final boolean hasNext(long position) {
@@ -72,5 +76,17 @@ public abstract class AbstractObjectStreamBuffer<T> implements ObjectStreamBuffe
 
   protected void closeSafely(CheckedRunnable task) {
     safely(task, e -> LOGGER.debug("Found exception closing buffer", e));
+  }
+
+  protected <T> T withReadLock(CheckedSupplier<T> supplier) {
+    return withLock(readLock, supplier);
+  }
+
+  protected <T> T withWriteLock(CheckedSupplier<T> supplier) {
+    return withLock(writeLock, supplier);
+  }
+
+  protected void releaseReadLock() {
+    safeUnlock(readLock);
   }
 }

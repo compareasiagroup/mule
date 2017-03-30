@@ -8,7 +8,9 @@ package org.mule.runtime.core.util;
 
 import org.mule.runtime.core.util.func.CheckedRunnable;
 
+import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * Utilities for functional programming
@@ -40,5 +42,9 @@ public class FunctionalUtils {
     } catch (Exception e) {
       exceptionHandler.accept(e);
     }
+  }
+
+  public static <T> Optional<T> or(Optional<T> optional, Supplier<Optional<T>> orElse) {
+    return optional.isPresent() ? optional : orElse.get();
   }
 }

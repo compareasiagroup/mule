@@ -8,8 +8,9 @@ package org.mule.runtime.core.internal.streaming.object;
 
 import static java.lang.Math.floor;
 import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
-import static org.mule.runtime.core.util.ConcurrencyUtils.safeUnlock;
+import static org.mule.runtime.core.util.FunctionalUtils.or;
 import org.mule.runtime.api.streaming.exception.StreamingBufferSizeExceededException;
 import org.mule.runtime.core.internal.streaming.object.iterator.StreamingIterator;
 import org.mule.runtime.core.streaming.objects.InMemoryCursorIteratorConfig;
@@ -36,8 +37,8 @@ public class BucketedObjectStreamBuffer<T> extends AbstractObjectStreamBuffer<T>
   private final StreamingIterator<T> stream;
   private final InMemoryCursorIteratorConfig config;
 
-  private List<Bucket<T>> buckets;
-  private Bucket<T> currentBucket;
+  private List<MutableBucket<T>> buckets;
+  private MutableBucket<T> currentBucket;
   private Position currentPosition;
   private Position maxPosition = null;
   private int instancesCount = 0;
@@ -52,21 +53,20 @@ public class BucketedObjectStreamBuffer<T> extends AbstractObjectStreamBuffer<T>
    * {@inheritDoc}
    */
   @Override
-  protected T doGet(long i) {
-    Position position = toPosition(i);
+  protected Optional<Bucket<T>> doGet(Position position) {
     if (maxPosition != null && maxPosition.compareTo(position) < 0) {
       throw new NoSuchElementException();
     }
 
-    readLock.lock();
-    try {
-      return getPresentItem(position).orElseGet(() -> {
-        safeUnlock(readLock);
-        return fetch(position);
-      });
-    } finally {
-      safeUnlock(readLock);
-    }
+    return withReadLock(() -> {
+      Optional<Bucket<T>> bucket = getPresentBucket(position);
+      if (bucket.isPresent()) {
+        return forwarding(bucket);
+      }
+
+      releaseReadLock();
+      return fetch(position);
+    });
   }
 
   /**
@@ -76,8 +76,7 @@ public class BucketedObjectStreamBuffer<T> extends AbstractObjectStreamBuffer<T>
   protected boolean doHasNext(long i) {
     Position position = toPosition(i);
 
-    readLock.lock();
-    try {
+    return withReadLock(() -> {
       if (maxPosition != null) {
         return position.compareTo(maxPosition) < 1;
       }
@@ -86,16 +85,13 @@ public class BucketedObjectStreamBuffer<T> extends AbstractObjectStreamBuffer<T>
         return true;
       }
 
+      releaseReadLock();
       try {
-        safeUnlock(readLock);
-        fetch(position);
-        return true;
+        return fetch(position).isPresent();
       } catch (NoSuchElementException e) {
         return false;
       }
-    } finally {
-      safeUnlock(readLock);
-    }
+    });
   }
 
   /**
@@ -115,68 +111,11 @@ public class BucketedObjectStreamBuffer<T> extends AbstractObjectStreamBuffer<T>
     return stream.size();
   }
 
-  private void initialiseBuckets() {
-    int size = stream.size();
-    if (size > 0) {
-      maxPosition = toPosition(size - 1);
-      buckets = new ArrayList<>(maxPosition.bucketIndex + 1);
-    } else {
-      buckets = new ArrayList<>();
-    }
-
-    currentBucket = new Bucket<>(config.getInitialBufferSize());
-    buckets.add(currentBucket);
-    currentPosition = new Position(0, -1);
-  }
-
-  private Optional<T> getPresentItem(Position position) {
-    if (position.bucketIndex < buckets.size()) {
-      Bucket<T> bucket = buckets.get(position.bucketIndex);
-      return bucket.get(position.itemIndex);
-    }
-
-    return empty();
-  }
-
-  private T fetch(Position position) {
-    writeLock.lock();
-
-    try {
-      return getPresentItem(position).orElseGet(() -> {
-        T item = null;
-
-        while (currentPosition.compareTo(position) < 0) {
-          if (!stream.hasNext()) {
-            maxPosition = currentPosition;
-            throw new NoSuchElementException();
-          }
-
-          item = stream.next();
-          if (currentBucket.add(item)) {
-            currentPosition = currentPosition.advanceItem();
-          } else {
-            currentBucket = Bucket.of(item, config.getBufferSizeIncrement());
-            buckets.add(currentBucket);
-            currentPosition = currentPosition.advanceBucket();
-          }
-          instancesCount++;
-          validateMaxBufferSizeNotExceeded();
-        }
-
-        return item;
-      });
-    } finally {
-      writeLock.unlock();
-    }
-  }
-
-  private void validateMaxBufferSizeNotExceeded() {
-    if (instancesCount > config.getMaxInMemoryInstances()) {
-      throw new StreamingBufferSizeExceededException(config.getMaxInMemoryInstances());
-    }
-  }
-
-  private Position toPosition(long position) {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Position toPosition(long position) {
     int initialBufferSize = config.getInitialBufferSize();
     int bucketsDelta = config.getBufferSizeIncrement();
 
@@ -192,67 +131,147 @@ public class BucketedObjectStreamBuffer<T> extends AbstractObjectStreamBuffer<T>
     return new Position(bucketIndex, itemIndex);
   }
 
-  private class Position implements Comparable<Position> {
-
-    private final int bucketIndex;
-    private final int itemIndex;
-
-    private Position(int bucketIndex, int itemIndex) {
-      this.bucketIndex = bucketIndex;
-      this.itemIndex = itemIndex;
+  private void initialiseBuckets() {
+    int size = stream.size();
+    if (size > 0) {
+      maxPosition = toPosition(size - 1);
+      buckets = new ArrayList<>(maxPosition.getBucketIndex() + 1);
+    } else {
+      buckets = new ArrayList<>();
     }
 
-    private Position advanceItem() {
-      return new Position(bucketIndex, itemIndex + 1);
+    currentBucket = new MutableBucket<>(0, config.getInitialBufferSize());
+    buckets.add(currentBucket);
+    currentPosition = new Position(0, -1);
+  }
+
+  private Optional<Bucket<T>> getPresentBucket(Position position) {
+    if (position.getBucketIndex() < buckets.size()) {
+      return ofNullable(buckets.get(position.getBucketIndex()));
     }
 
-    private Position advanceBucket() {
-      return new Position(bucketIndex + 1, 0);
-    }
+    return empty();
+  }
 
-    @Override
-    public int compareTo(Position o) {
-      int compare = bucketIndex - o.bucketIndex;
-      if (compare == 0) {
-        compare = itemIndex - o.itemIndex;
+  private Optional<Bucket<T>> fetch(Position position) {
+    return withWriteLock(() -> {
+      Optional<Bucket<T>> presentBucket = getPresentBucket(position);
+      if (presentBucket.filter(bucket -> bucket.contains(position)).isPresent()) {
+        return presentBucket;
       }
 
-      return compare;
+      while (currentPosition.compareTo(position) < 0) {
+        if (!stream.hasNext()) {
+          maxPosition = currentPosition;
+          return empty();
+        }
+
+        T item = stream.next();
+        if (currentBucket.add(item)) {
+          currentPosition = currentPosition.advanceItem();
+        } else {
+          currentBucket = mutableBucket(item, currentBucket.index + 1, config.getBufferSizeIncrement());
+          buckets.add(currentBucket);
+          currentPosition = currentPosition.advanceBucket();
+        }
+        instancesCount++;
+        validateMaxBufferSizeNotExceeded();
+      }
+
+      return of(currentBucket);
+    });
+  }
+
+  private Optional<Bucket<T>> forwarding(Optional<Bucket<T>> presentBucket) {
+    return presentBucket.map(b -> new ForwardingBucket<>((MutableBucket<T>) b));
+  }
+
+  private void validateMaxBufferSizeNotExceeded() {
+    if (instancesCount > config.getMaxInMemoryInstances()) {
+      throw new StreamingBufferSizeExceededException(config.getMaxInMemoryInstances());
     }
   }
 
+  private <T> MutableBucket<T> mutableBucket(T initialItem, int index, int capacity) {
+    MutableBucket<T> bucket = new MutableBucket<>(index, capacity);
+    bucket.add(initialItem);
 
-  private static class Bucket<T> {
+    return bucket;
+  }
+
+  private class MutableBucket<T> implements Bucket<T> {
 
     private final List<T> items;
     private final int capacity;
+    private final int index;
 
-    private Bucket(int capacity) {
+    private MutableBucket(int index, int capacity) {
+      this.index = index;
       this.capacity = capacity;
       this.items = new ArrayList<>(capacity);
     }
 
-    private static <T> Bucket<T> of(T initialItem, int capacity) {
-      Bucket<T> bucket = new Bucket<>(capacity);
-      bucket.add(initialItem);
+    @Override
+    public Optional<T> get(int index) {
+      return withReadLock(() -> {
+        if (index < items.size()) {
+          return ofNullable(items.get(index));
+        }
+        return empty();
+      });
+    }
 
-      return bucket;
+    @Override
+    public boolean contains(Position position) {
+      return withReadLock(() -> index == position.getBucketIndex() && position.getItemIndex() < items.size());
     }
 
     private boolean add(T item) {
-      if (items.size() < capacity) {
-        items.add(item);
-        return true;
-      }
+      return withWriteLock(() -> {
+        if (items.size() < capacity) {
+          items.add(item);
+          return true;
+        }
 
-      return false;
+        return false;
+      });
+    }
+  }
+
+  private class ForwardingBucket<T> implements Bucket<T> {
+
+    private MutableBucket<T> delegate;
+
+    public ForwardingBucket(MutableBucket<T> delegate) {
+      this.delegate = delegate;
     }
 
-    private Optional<T> get(int index) {
-      if (index < items.size()) {
-        return ofNullable(items.get(index));
-      }
-      return empty();
+    @Override
+    public Optional<T> get(int index) {
+      return withReadLock(() -> {
+        Optional<T> item = delegate.get(index);
+        if (item.isPresent()) {
+          return item;
+        }
+
+        Position position = new Position(delegate.index, index);
+        releaseReadLock();
+        return withWriteLock(() -> {
+          Optional<T> updatedItem = delegate.get(index);
+          if (updatedItem.isPresent()) {
+            return updatedItem;
+          }
+          delegate = (MutableBucket<T>) fetch(position).orElseThrow(NoSuchElementException::new);
+          return or(delegate.get(index), () -> {
+            throw new NoSuchElementException();
+          });
+        });
+      });
+    }
+
+    @Override
+    public boolean contains(Position position) {
+      return delegate.contains(position);
     }
   }
 }
