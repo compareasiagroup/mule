@@ -213,28 +213,24 @@ public class BucketedObjectStreamBuffer<T> extends AbstractObjectStreamBuffer<T>
 
     @Override
     public Optional<T> get(int index) {
-      return withReadLock(() -> {
-        if (index < items.size()) {
-          return ofNullable(items.get(index));
-        }
-        return empty();
-      });
+      if (index < items.size()) {
+        return ofNullable(items.get(index));
+      }
+      return empty();
     }
 
     @Override
     public boolean contains(Position position) {
-      return withReadLock(() -> index == position.getBucketIndex() && position.getItemIndex() < items.size());
+      return index == position.getBucketIndex() && position.getItemIndex() < items.size();
     }
 
     private boolean add(T item) {
-      return withWriteLock(() -> {
-        if (items.size() < capacity) {
-          items.add(item);
-          return true;
-        }
+      if (items.size() < capacity) {
+        items.add(item);
+        return true;
+      }
 
-        return false;
-      });
+      return false;
     }
   }
 
@@ -256,16 +252,10 @@ public class BucketedObjectStreamBuffer<T> extends AbstractObjectStreamBuffer<T>
 
         Position position = new Position(delegate.index, index);
         releaseReadLock();
-        return withWriteLock(() -> {
-          Optional<T> updatedItem = delegate.get(index);
-          if (updatedItem.isPresent()) {
-            return updatedItem;
-          }
-          delegate = (MutableBucket<T>) fetch(position).orElseThrow(NoSuchElementException::new);
-          return or(delegate.get(index), () -> {
-            throw new NoSuchElementException();
-          });
-        });
+        delegate = (MutableBucket<T>) fetch(position).orElseThrow(NoSuchElementException::new);
+        return withReadLock(() -> or(delegate.get(index), () -> {
+          throw new NoSuchElementException();
+        }));
       });
     }
 
