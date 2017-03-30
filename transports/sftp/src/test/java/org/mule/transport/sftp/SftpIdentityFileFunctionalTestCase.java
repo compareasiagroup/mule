@@ -27,6 +27,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <code>LargeFileReceiveFunctionalTestCase</code> tests receiving a large file
@@ -36,6 +38,7 @@ import org.junit.runners.Parameterized.Parameters;
  */
 public class SftpIdentityFileFunctionalTestCase extends AbstractSftpTestCase
 {
+    private static final Logger logger = LoggerFactory.getLogger(SftpIdentityFileFunctionalTestCase.class);
     private static final int DEFAULT_TIMEOUT = 10000;
 
     // Increase this to be a little larger than expected download time

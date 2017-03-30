@@ -13,9 +13,12 @@ import org.mule.api.config.ConfigurationBuilder;
 import org.mule.api.store.ObjectStore;
 import org.mule.config.spring.SpringXmlConfigurationBuilder;
 import org.mule.util.store.AbstractObjectStoreContractTestCase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JdbcObjectStoreTestCase extends AbstractObjectStoreContractTestCase
 {
+    private static final Logger logger = LoggerFactory.getLogger(JdbcObjectStoreTestCase.class);
 
     public JdbcObjectStoreTestCase()
     {

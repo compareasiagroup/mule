@@ -23,6 +23,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertTrue;
 
@@ -35,6 +37,8 @@ public abstract class AbstractReceivingMailConnectorTestCase extends AbstractMai
 {
     public static final int POLL_PERIOD_MS = 2000;
     public static final int WAIT_PERIOD_MS = 4 * POLL_PERIOD_MS;
+
+    private static final Logger logger = LoggerFactory.getLogger(AbstractReceivingMailConnectorTestCase.class);
 
     protected AbstractReceivingMailConnectorTestCase(String protocol)
     {

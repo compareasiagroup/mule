@@ -9,6 +9,8 @@ package org.mule.config.spring.parsers;
 import org.mule.config.spring.parsers.beans.OrphanBean;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This constructs a <em>temporary</em> bean whose contents are injected into a parent map by
@@ -17,6 +19,8 @@ import org.junit.Test;
  */
 public class MapEntryCombinerTestCase extends AbstractNamespaceTestCase
 {
+    private static final Logger logger = LoggerFactory.getLogger(MapEntryCombinerTestCase.class);
+
     @Override
     protected String getConfigFile()
     {

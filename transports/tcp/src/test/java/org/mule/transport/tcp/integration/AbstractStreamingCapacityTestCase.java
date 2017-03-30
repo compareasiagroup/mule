@@ -23,6 +23,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * IMPORTANT - DO NOT RUN THIS TEST IN AN IDE WITH LOG LEVEL OF DEBUG. USE INFO TO
@@ -36,6 +38,7 @@ public abstract class AbstractStreamingCapacityTestCase extends AbstractServiceA
     public static final long ONE_GB = ONE_KB * ONE_MB;
     public static final int MESSAGES = 21;
 
+    private static final Logger logger = LoggerFactory.getLogger(AbstractStreamingCapacityTestCase.class);
     private long size;
 
     public AbstractStreamingCapacityTestCase(ConfigVariant variant, String configResources, long size)

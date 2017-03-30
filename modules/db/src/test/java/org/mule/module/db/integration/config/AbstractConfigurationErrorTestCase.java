@@ -12,10 +12,12 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import org.mule.api.MuleContext;
 import org.mule.tck.junit4.FunctionalTestCase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AbstractConfigurationErrorTestCase extends FunctionalTestCase
 {
-
+    private static final Logger logger = LoggerFactory.getLogger(AbstractConfigurationErrorTestCase.class);
     private Exception exception;
 
     public AbstractConfigurationErrorTestCase()

@@ -38,6 +38,8 @@ import javax.mail.internet.MimeMultipart;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractEmailFunctionalTestCase extends AbstractServiceAndFlowTestCase
 {
@@ -52,6 +54,8 @@ public abstract class AbstractEmailFunctionalTestCase extends AbstractServiceAnd
     protected static final String DEFAULT_MESSAGE = "Test email message";
     protected static final String DEFAULT_PASSWORD = "password";
     protected static final String DEFAULT_PROCESSED_MAILBOX = "processed";
+
+    private static final Logger logger = LoggerFactory.getLogger(AbstractEmailFunctionalTestCase.class);
 
     private String protocol;
     private boolean isMimeMessage;

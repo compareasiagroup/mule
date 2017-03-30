@@ -19,9 +19,13 @@ import org.mule.tck.testmodels.services.Person;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MuleClientAxisTestCase extends FunctionalTestCase
 {
+    private static final Logger logger = LoggerFactory.getLogger(MuleClientAxisTestCase.class);
+
     @Rule
     public DynamicPort dynamicPort1 = new DynamicPort("port1");
 
@@ -71,7 +75,7 @@ public class MuleClientAxisTestCase extends FunctionalTestCase
         MuleMessage result = client.send(
             getMuleAddress(client, "inMyComponent3") + "/mycomponent3?method=getPerson", "Fred", null);
         assertNotNull(result);
-        logger.debug(result.getPayload());
+        logger.debug((String) result.getPayload());
         assertTrue(result.getPayload() instanceof Person);
         assertEquals("Fred", ((Person)result.getPayload()).getFirstName());
         assertEquals("Flintstone", ((Person)result.getPayload()).getLastName());

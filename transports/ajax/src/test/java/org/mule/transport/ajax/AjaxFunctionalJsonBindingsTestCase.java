@@ -34,9 +34,13 @@ import org.junit.runners.Parameterized.Parameters;
 import org.mortbay.cometd.client.BayeuxClient;
 import org.mortbay.jetty.client.Address;
 import org.mortbay.jetty.client.HttpClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AjaxFunctionalJsonBindingsTestCase extends AbstractServiceAndFlowTestCase
 {
+    private static final Logger logger = LoggerFactory.getLogger(AjaxFunctionalJsonBindingsTestCase.class);
+
     public AjaxFunctionalJsonBindingsTestCase(ConfigVariant variant, String configResources)
     {
         super(variant, configResources);

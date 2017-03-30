@@ -16,9 +16,13 @@ import org.mule.tck.AbstractServiceAndFlowTestCase;
 import org.mule.transport.tcp.integration.AbstractStreamingCapacityTestCase;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractStreamingDownloadMule1389TestCase extends AbstractServiceAndFlowTestCase
 {
+    private static final Logger logger = LoggerFactory.getLogger(AbstractStreamingCapacityTestCase.class);
+
     public AbstractStreamingDownloadMule1389TestCase(ConfigVariant variant, String configResources)
     {
         super(variant, configResources);

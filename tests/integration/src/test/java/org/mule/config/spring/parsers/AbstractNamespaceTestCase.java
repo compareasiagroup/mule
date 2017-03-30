@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -21,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 
 public abstract class AbstractNamespaceTestCase extends FunctionalTestCase
 {
+    private static final Logger logger = LoggerFactory.getLogger(AbstractNamespaceTestCase.class);
 
     @Test
     public void testParse()

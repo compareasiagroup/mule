@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * We are careful here to access the file sstem in a generic way.  This means setting directories
@@ -28,6 +30,8 @@ import org.junit.Test;
  */
 public class FileFunctionalTestCase extends AbstractFileFunctionalTestCase
 {
+    private static final Logger logger = LoggerFactory.getLogger(FileFunctionalTestCase.class);
+
     public FileFunctionalTestCase(ConfigVariant variant, String configResources)
     {
         super(variant, configResources);

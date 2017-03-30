@@ -19,6 +19,8 @@ import java.util.Set;
 
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UdpConnectorFunctionalTestCase extends AbstractServiceAndFlowTestCase
 {
@@ -29,6 +31,9 @@ public class UdpConnectorFunctionalTestCase extends AbstractServiceAndFlowTestCa
     public static final long MIN_PAUSE_PERIOD = 10;
     public static final long BETWEEN_BATCH_PAUSE = 5000;
 
+
+    private static final Logger logger = LoggerFactory.getLogger(UdpConnectorFunctionalTestCase.class);
+    
     public UdpConnectorFunctionalTestCase(ConfigVariant variant, String configResources)
     {
         super(variant, configResources);

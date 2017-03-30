@@ -29,6 +29,8 @@ import java.util.Collection;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runners.Parameterized;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -41,6 +43,8 @@ public abstract class AbstractJmsRedeliveryTestCase extends AbstractServiceAndFl
     protected static final String JMS_INPUT_QUEUE2 = "jms://in2?connector=jmsConnectorNoRedelivery";
     protected static final String JMS_DEAD_LETTER = "jms://dead.letter?connector=jmsConnectorNoRedelivery";
     protected final int timeout = getTestTimeoutSecs() * 1000 / 4;
+
+    private static final Logger logger = LoggerFactory.getLogger(AbstractJmsRedeliveryTestCase.class);
 
     protected MuleClient client;
     protected Latch messageRedeliveryExceptionFired;

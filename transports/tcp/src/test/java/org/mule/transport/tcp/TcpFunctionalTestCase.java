@@ -20,9 +20,12 @@ import java.util.Collection;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TcpFunctionalTestCase extends AbstractServiceAndFlowTestCase
 {
+    private static Logger logger = LoggerFactory.getLogger(TcpFunctionalTestCase.class);
     protected static String TEST_MESSAGE = "Test TCP Request";
 
     @Rule

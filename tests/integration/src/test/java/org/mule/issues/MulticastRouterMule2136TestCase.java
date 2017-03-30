@@ -20,6 +20,8 @@ import java.util.Collection;
 
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is a simplified version of
@@ -34,6 +36,8 @@ public class MulticastRouterMule2136TestCase extends AbstractXmlFunctionalTestCa
     public static final String SERIALIZED = "<org.mule.issues.MulticastRouterMule2136TestCase_-Parent>\n"
                                             + "  <child/>\n"
                                             + "</org.mule.issues.MulticastRouterMule2136TestCase_-Parent>";
+
+    private static final Logger logger = LoggerFactory.getLogger(MulticastRouterMule2136TestCase.class);
 
     @Parameters
     public static Collection<Object[]> parameters()

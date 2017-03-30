@@ -22,11 +22,15 @@ import java.io.File;
 import org.apache.commons.io.FileUtils;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ServiceInFlightMessagesTestCase extends FunctionalTestCase
 {
     protected static final int WAIT_TIME_MILLIS = 500;
     protected static final int NUM_MESSAGES = 500;
+
+    private static final Logger logger = LoggerFactory.getLogger(ServiceInFlightMessagesTestCase.class);
 
     @Override
     protected String getConfigFile()

@@ -16,9 +16,13 @@ import org.mule.tck.junit4.FunctionalTestCase;
 import java.util.Iterator;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SpringSecurityNamespaceHandlerTestCase extends FunctionalTestCase
 {
+    private static final Logger logger = LoggerFactory.getLogger(SpringSecurityNamespaceHandlerTestCase.class);
+
     @Override
     protected String getConfigFile()
     {
@@ -44,7 +48,7 @@ public class SpringSecurityNamespaceHandlerTestCase extends FunctionalTestCase
         while (providers.hasNext())
         {
             SecurityProvider provider = providers.next();
-            logger.debug(provider);
+            logger.debug(String.valueOf(provider));
             logger.debug(provider.getName());
         }
         knownProperties(getProvider("customProvider"));

@@ -20,9 +20,13 @@ import org.mule.tck.security.TestSingleUserSecurityProvider;
 import java.util.Iterator;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SecurityNamespaceHandlerTestCase extends FunctionalTestCase
 {
+    private static final Logger logger = LoggerFactory.getLogger(SecurityNamespaceHandlerTestCase.class);
+
     @Override
     protected String getConfigFile()
     {

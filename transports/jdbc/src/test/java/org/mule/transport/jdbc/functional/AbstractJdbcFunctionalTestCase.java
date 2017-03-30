@@ -24,14 +24,16 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.ArrayListHandler;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractJdbcFunctionalTestCase extends AbstractServiceAndFlowTestCase
 {
 
     protected static final String[] TEST_VALUES = {"Test", "The Moon", "Terra"};
-
     protected JdbcConnector jdbcConnector;
 
+    private static final Logger logger = LoggerFactory.getLogger(AbstractJdbcFunctionalTestCase.class);
     private boolean populateTestData = true;
    
     protected static String getConfig()

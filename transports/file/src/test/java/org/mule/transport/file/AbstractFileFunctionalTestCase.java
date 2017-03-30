@@ -25,6 +25,8 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * We are careful here to access the file system in a generic way. This means setting
@@ -34,6 +36,8 @@ public abstract class AbstractFileFunctionalTestCase extends AbstractServiceAndF
 {
     public static final String TEST_MESSAGE = "Test file contents";
     public static final String TARGET_FILE = "TARGET_FILE";
+
+    private static final Logger logger = LoggerFactory.getLogger(AbstractFileFunctionalTestCase.class);
 
     protected File tmpDir;
 

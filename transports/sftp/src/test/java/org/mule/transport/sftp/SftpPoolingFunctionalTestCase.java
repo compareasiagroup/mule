@@ -29,6 +29,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <code>SftpPoolingFunctionalTestCase</code> tests sending an receiving multiple
@@ -36,6 +38,7 @@ import org.junit.runners.Parameterized.Parameters;
  */
 public class SftpPoolingFunctionalTestCase extends AbstractSftpTestCase
 {
+    private static final Logger logger = LoggerFactory.getLogger(SftpPoolingFunctionalTestCase.class);
     private static final long TIMEOUT = 30000;
 
     private List<String> sendFiles;

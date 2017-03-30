@@ -12,6 +12,8 @@ import org.mule.tck.junit4.FunctionalTestCase;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Not a real test, used to generate load and verify that there are no memory
@@ -21,6 +23,7 @@ import org.junit.Test;
 public class QueryPerformanceTestCase extends FunctionalTestCase
 {
 
+    private static final Logger logger = LoggerFactory.getLogger(QueryPerformanceTestCase.class);
     private LoadGenerator loadGenerator = new LoadGenerator();
 
     @Override

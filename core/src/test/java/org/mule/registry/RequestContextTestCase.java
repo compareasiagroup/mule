@@ -39,10 +39,12 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RequestContextTestCase extends AbstractMuleTestCase
 {
-
+    private static final Logger logger = LoggerFactory.getLogger(RequestContextTestCase.class);
     private boolean threadSafeEvent;
     private MuleContext muleContext = mock(MuleContext.class, RETURNS_DEEP_STUBS);
 

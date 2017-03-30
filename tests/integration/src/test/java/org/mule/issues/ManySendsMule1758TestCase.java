@@ -18,9 +18,12 @@ import java.util.Collection;
 
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ManySendsMule1758TestCase extends AbstractServiceAndFlowTestCase
 {
+    private static final Logger logger = LoggerFactory.getLogger(ManySendsMule1758TestCase.class);
     private static int NUM_MESSAGES = 3000;
 
     @Parameters

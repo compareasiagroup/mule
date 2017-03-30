@@ -65,6 +65,8 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.rules.TemporaryFolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Extends {@link AbstractMuleTestCase} providing access to a {@link MuleContext}
@@ -72,6 +74,7 @@ import org.junit.rules.TemporaryFolder;
  */
 public abstract class AbstractMuleContextTestCase extends AbstractMuleTestCase
 {
+    private static final Logger logger = LoggerFactory.getLogger(AbstractMuleContextTestCase.class);
     public static final String TEST_PAYLOAD = "test";
     public static final String WORKING_DIRECTORY_SYSTEM_PROPERTY_KEY = "workingDirectory";
 
@@ -323,9 +326,11 @@ public abstract class AbstractMuleContextTestCase extends AbstractMuleTestCase
                 try
                 {
                     muleContext.dispose();
-                } catch (IllegalStateException e)
+                }
+                catch (IllegalStateException e)
                 {
                     // Ignore
+                    logger.warn(e.getMessage());
                 }
 
 

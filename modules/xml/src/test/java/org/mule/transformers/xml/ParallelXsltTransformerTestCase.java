@@ -18,9 +18,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.custommonkey.xmlunit.XMLAssert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ParallelXsltTransformerTestCase extends AbstractMuleContextTestCase
 {
+    private static final Logger logger = LoggerFactory.getLogger(ParallelXsltTransformerTestCase.class);
     private String srcData;
     private String resultData;
     private Collection<Object> actualResults = new ConcurrentLinkedQueue<Object>();

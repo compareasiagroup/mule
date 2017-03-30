@@ -19,12 +19,15 @@ import java.util.Collection;
 import org.apache.commons.lang.NotImplementedException;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Test the archive features.
  */
 public class SftpDuplicateHandlingFunctionalTestCase extends AbstractSftpTestCase
 {
+    private static final Logger logger = LoggerFactory.getLogger(SftpDuplicateHandlingFunctionalTestCase.class);
     private static final long TIMEOUT = 10000;
 
     // Size of the generated stream - 2 Mb

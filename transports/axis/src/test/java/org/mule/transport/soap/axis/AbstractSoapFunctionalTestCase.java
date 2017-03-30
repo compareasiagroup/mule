@@ -25,9 +25,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractSoapFunctionalTestCase extends FunctionalTestCase
 {
+    private static final Logger logger = LoggerFactory.getLogger(AbstractSoapFunctionalTestCase.class);
+
     protected abstract String getRequestResponseEndpoint();
 
     protected abstract String getReceiveEndpoint();
