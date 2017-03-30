@@ -18,10 +18,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MulticastConnectorFunctionalTestCase extends FunctionalTestCase
 {
     public static final String MESSAGE = "hello";
+
+    private static final Logger logger = LoggerFactory.getLogger(MulticastConnectorFunctionalTestCase.class);
 
     @Override
     protected String getConfigFile()

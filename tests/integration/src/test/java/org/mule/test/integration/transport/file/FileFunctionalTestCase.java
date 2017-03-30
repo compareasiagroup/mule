@@ -28,6 +28,8 @@ import java.util.Collection;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -36,6 +38,8 @@ import static org.junit.Assert.assertTrue;
 
 public class FileFunctionalTestCase extends AbstractServiceAndFlowTestCase implements FunctionalTestNotificationListener
 {
+    private static final Logger logger = LoggerFactory.getLogger(FileFunctionalTestCase.class);
+
     @ClassRule
     public static SystemProperty filePollOnlyOnPrimaryNode = new SystemProperty(FileMessageReceiver.MULE_TRANSPORT_FILE_SINGLEPOLLINSTANCE,"true");
 

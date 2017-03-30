@@ -9,9 +9,13 @@ package org.mule.config.spring.parsers;
 import org.mule.config.spring.parsers.beans.OrphanBean;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MapCombinerTestCase extends AbstractNamespaceTestCase
 {
+    private static final Logger logger = LoggerFactory.getLogger(MapCombinerTestCase.class);
+
     @Override
     protected String getConfigFile()
     {

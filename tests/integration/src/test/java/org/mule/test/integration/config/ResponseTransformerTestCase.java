@@ -17,12 +17,16 @@ import java.util.List;
 
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 public class ResponseTransformerTestCase extends AbstractServiceAndFlowTestCase
 {
+    private static final Logger logger = LoggerFactory.getLogger(ResponseTransformerTestCase.class);
+
     @Parameters
     public static Collection<Object[]> parameters()
     {
@@ -54,7 +58,7 @@ public class ResponseTransformerTestCase extends AbstractServiceAndFlowTestCase
         for (int count = 1; iterator.hasNext(); count++)
         {
             Transformer transformer = iterator.next();
-            logger.debug(transformer);
+            logger.debug(String.valueOf(transformer));
             assertEquals(prefix + count, transformer.getName());
         }
     }

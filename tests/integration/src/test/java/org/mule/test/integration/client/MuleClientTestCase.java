@@ -15,9 +15,13 @@ import org.mule.module.client.MuleClient;
 import org.mule.tck.junit4.FunctionalTestCase;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MuleClientTestCase extends FunctionalTestCase
 {
+    private static final Logger logger = LoggerFactory.getLogger(MuleClientTestCase.class);
+
     @Override
     protected String getConfigFile()
     {

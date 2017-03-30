@@ -38,10 +38,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.resource.spi.work.Work;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AsyncRequestReplyRequesterTestCase extends AbstractMuleContextTestCase
     implements ExceptionListener
 {
+    private static final Logger logger = LoggerFactory.getLogger(AsyncRequestReplyRequesterTestCase.class);
 
     TestAsyncRequestReplyRequester asyncReplyMP;
 

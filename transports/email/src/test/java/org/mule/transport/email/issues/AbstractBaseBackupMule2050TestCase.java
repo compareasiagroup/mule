@@ -10,6 +10,8 @@ import org.mule.api.transport.Connector;
 import org.mule.transport.email.AbstractRetrieveMailConnector;
 import org.mule.transport.email.connectors.ImapConnectorTestCase;
 import org.mule.util.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
@@ -18,7 +20,7 @@ import static org.junit.Assert.assertTrue;
 
 public abstract class AbstractBaseBackupMule2050TestCase extends ImapConnectorTestCase
 {
-
+    private static final Logger logger = LoggerFactory.getLogger(AbstractBaseBackupMule2050TestCase.class);
     private boolean backupEnabled;
 
     public AbstractBaseBackupMule2050TestCase(boolean backupEnabled)

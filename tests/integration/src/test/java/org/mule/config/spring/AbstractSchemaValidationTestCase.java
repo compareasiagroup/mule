@@ -24,6 +24,8 @@ import javax.xml.validation.SchemaFactory;
 import org.apache.commons.collections.map.HashedMap;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -33,6 +35,9 @@ public abstract class AbstractSchemaValidationTestCase extends AbstractMuleTestC
 {
 
     public static final String SEPARATOR = " ";
+
+    private static final Logger logger = LoggerFactory.getLogger(AbstractSchemaValidationTestCase.class);
+
     protected Map schemas = new HashedMap();
 
     // we define these locally so that tests use the latest version rather than grabbing xsi:location

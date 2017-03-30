@@ -20,9 +20,12 @@ import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.registry.MuleRegistry;
 import org.mule.transport.sftp.SftpConnector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SftpInvalidInboundEndpointTestCase extends AbstractSftpDataIntegrityTestCase
 {
+    private static final Logger logger = LoggerFactory.getLogger(SftpInvalidInboundEndpointTestCase.class);
     private static final int NO_OF_INVALID_ATTEMPTS = 50;
 
     public SftpInvalidInboundEndpointTestCase(ConfigVariant variant, String configResources)

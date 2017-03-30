@@ -14,6 +14,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
 
@@ -23,7 +25,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class SocketTimingExperimentTestCase extends AbstractMuleTestCase
 {
-
+    private static final Logger logger = LoggerFactory.getLogger(SocketTimingExperimentTestCase.class);
     private static int MAX_COUNT = 3;
     private static int SERVER_PORT = 60323;
     private static String LOCALHOST = "localhost";
@@ -38,7 +40,7 @@ public class SocketTimingExperimentTestCase extends AbstractMuleTestCase
         }
         catch (Exception e)
         {
-            logger.info(e);
+            logger.info(String.valueOf(e));
         }
         try
         {
@@ -47,7 +49,7 @@ public class SocketTimingExperimentTestCase extends AbstractMuleTestCase
         }
         catch (Exception e)
         {
-            logger.info(e);
+            logger.info(String.valueOf(e));
         }
     }
 

@@ -18,11 +18,15 @@ import java.util.Random;
 
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class XmlFilterFunctionalTestCase extends AbstractXmlFunctionalTestCase
 {
     public static final int MAX_COUNT = 100;
     public static final String STRING_MESSAGE = "Hello world";
+
+    private static final Logger logger = LoggerFactory.getLogger(XmlFilterFunctionalTestCase.class);
 
     @Parameters
     public static Collection<Object[]> parameters()

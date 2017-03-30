@@ -19,10 +19,13 @@ import org.apache.commons.dbutils.handlers.ArrayListHandler;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JdbcBridgeFunctionalTestCase extends AbstractJdbcFunctionalTestCase
 {
 
+    private static final Logger logger = LoggerFactory.getLogger(JdbcBridgeFunctionalTestCase.class);
     private static final int TEST_ROWS = 10;
     
     public JdbcBridgeFunctionalTestCase(ConfigVariant variant, String configResources)

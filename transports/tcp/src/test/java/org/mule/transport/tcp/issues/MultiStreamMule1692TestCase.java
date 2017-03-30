@@ -27,9 +27,12 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MultiStreamMule1692TestCase extends AbstractServiceAndFlowTestCase
 {
+    private static final Logger logger = LoggerFactory.getLogger(MultiStreamMule1692TestCase.class);
     public static final int TIMEOUT = 3000;
     public static final String TEST_MESSAGE = "Test TCP Request";
     public static final String TEST_MESSAGE_2 = "Second test TCP Request";

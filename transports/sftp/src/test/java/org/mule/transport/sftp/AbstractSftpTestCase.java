@@ -53,12 +53,15 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Rule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Lennart Häggkvist, Magnus Larsson Date: Jun 8, 2009
  */
 public abstract class AbstractSftpTestCase extends AbstractServiceAndFlowTestCase
 {
+    private static final Logger logger = LoggerFactory.getLogger(AbstractSftpTestCase.class);
     private static final String HOST = "localhost";
     private static final String USER = "muletest1";
     private static final String PASSWORD = "muletest1";

@@ -21,6 +21,8 @@ import org.mule.transport.file.AbstractFileFunctionalTestCase;
 import java.io.File;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This used to be part of FileFunctionalTest; moved here to allow isolation of
@@ -28,6 +30,8 @@ import org.junit.Test;
  */
 public class IndirectReceiveMule1842TestCase extends AbstractFileFunctionalTestCase
 {
+    private static final Logger logger = LoggerFactory.getLogger(IndirectReceiveMule1842TestCase.class);
+
     public IndirectReceiveMule1842TestCase(ConfigVariant variant, String configResources)
     {
         super(variant, configResources);
