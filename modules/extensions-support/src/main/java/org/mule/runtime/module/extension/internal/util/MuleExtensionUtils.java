@@ -44,7 +44,6 @@ import org.mule.runtime.core.api.MuleContext;
 import org.mule.runtime.core.api.construct.FlowConstruct;
 import org.mule.runtime.core.api.exception.MessagingExceptionHandler;
 import org.mule.runtime.core.api.lifecycle.LifecycleState;
-import org.mule.runtime.core.api.message.InternalMessage;
 import org.mule.runtime.core.api.transaction.TransactionConfig;
 import org.mule.runtime.core.internal.metadata.NullMetadataResolverFactory;
 import org.mule.runtime.core.management.stats.FlowConstructStatistics;
@@ -287,7 +286,7 @@ public class MuleExtensionUtils {
         return null;
       }
     };
-    return Event.builder(create(flowConstruct, "InitializerEvent")).message(InternalMessage.builder().nullPayload().build())
+    return Event.builder(create(flowConstruct, "InitializerEvent")).message(Message.builder().nullPayload().build())
         .flow(flowConstruct).build();
   }
 

@@ -11,10 +11,9 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mule.extension.http.api.HttpHeaders.Names.TRANSFER_ENCODING;
 import static org.mule.service.http.api.HttpConstants.HttpStatus.NO_CONTENT;
-
 import org.mule.runtime.api.exception.MuleException;
+import org.mule.runtime.api.message.Message;
 import org.mule.runtime.core.api.Event;
-import org.mule.runtime.core.api.message.InternalMessage;
 import org.mule.runtime.core.api.processor.Processor;
 import org.mule.tck.junit4.rule.DynamicPort;
 import org.mule.test.module.http.functional.AbstractHttpTestCase;
@@ -65,7 +64,7 @@ public class HttpListenerNoContentTestCase extends AbstractHttpTestCase {
     @Override
     public Event process(Event event) throws MuleException {
       return Event.builder(event)
-          .message(InternalMessage.builder().payload(new ByteArrayInputStream(new byte[] {})).build())
+          .message(Message.builder().payload(new ByteArrayInputStream(new byte[] {})).build())
           .build();
     }
   }

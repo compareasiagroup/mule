@@ -91,6 +91,7 @@ import org.mule.runtime.api.deployment.meta.MulePolicyModel.MulePolicyModelBuild
 import org.mule.runtime.api.exception.MuleException;
 import org.mule.runtime.api.lifecycle.Initialisable;
 import org.mule.runtime.api.lifecycle.InitialisationException;
+import org.mule.runtime.api.message.Message;
 import org.mule.runtime.container.api.ModuleRepository;
 import org.mule.runtime.container.internal.DefaultModuleRepository;
 import org.mule.runtime.core.DefaultEventContext;
@@ -98,7 +99,6 @@ import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.MuleContext;
 import org.mule.runtime.core.api.MuleEventContext;
 import org.mule.runtime.core.api.construct.Flow;
-import org.mule.runtime.core.api.message.InternalMessage;
 import org.mule.runtime.core.api.registry.MuleRegistry;
 import org.mule.runtime.core.config.StartupContext;
 import org.mule.runtime.core.exception.MessagingException;
@@ -3933,7 +3933,7 @@ public class DeploymentServiceTestCase extends AbstractMuleTestCase {
   private void executeApplicationFlow(String flowName) throws MuleException {
     Flow mainFlow =
         (Flow) deploymentService.getApplications().get(0).getMuleContext().getRegistry().lookupFlowConstruct(flowName);
-    InternalMessage muleMessage = InternalMessage.builder().payload(TEST_MESSAGE).build();
+    Message muleMessage = Message.builder().payload(TEST_MESSAGE).build();
 
     mainFlow.process(Event.builder(DefaultEventContext.create(mainFlow, TEST_CONNECTOR))
         .message(muleMessage)

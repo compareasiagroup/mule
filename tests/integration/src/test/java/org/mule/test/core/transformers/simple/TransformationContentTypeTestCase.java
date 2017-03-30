@@ -10,8 +10,7 @@ import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-
-import org.mule.runtime.core.api.message.InternalMessage;
+import org.mule.runtime.api.message.Message;
 import org.mule.runtime.core.api.transformer.Transformer;
 import org.mule.test.AbstractIntegrationTestCase;
 
@@ -33,7 +32,7 @@ public class TransformationContentTypeTestCase extends AbstractIntegrationTestCa
     assertNotNull(trans);
     String inputMessage = "ABCDEF";
 
-    InternalMessage message = InternalMessage.builder().payload(inputMessage).build();
+    Message message = Message.builder().payload(inputMessage).build();
     List<Transformer> transformers = Arrays.asList(new Transformer[] {trans});
     message = muleContext.getTransformationService().applyTransformers(message, null, transformers);
     assertThat(message.getPayload().getDataType().getMediaType().getPrimaryType(), is("text"));

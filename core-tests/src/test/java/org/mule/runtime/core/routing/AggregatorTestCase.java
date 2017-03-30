@@ -10,15 +10,14 @@ import static java.util.Optional.of;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-
+import org.mule.runtime.api.exception.MuleException;
+import org.mule.runtime.api.message.Message;
 import org.mule.runtime.core.DefaultEventContext;
+import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.EventContext;
 import org.mule.runtime.core.api.MuleContext;
-import org.mule.runtime.core.api.Event;
-import org.mule.runtime.api.exception.MuleException;
-import org.mule.runtime.core.api.construct.Flow;
-import org.mule.runtime.core.api.message.InternalMessage;
 import org.mule.runtime.core.api.MuleSession;
+import org.mule.runtime.core.api.construct.Flow;
 import org.mule.runtime.core.api.store.ObjectStoreException;
 import org.mule.runtime.core.routing.correlation.EventCorrelatorCallback;
 import org.mule.runtime.core.session.DefaultMuleSession;
@@ -48,9 +47,9 @@ public class AggregatorTestCase extends AbstractMuleContextTestCase {
 
     EventContext context = DefaultEventContext.create(flow, TEST_CONNECTOR, "foo");
 
-    InternalMessage message1 = InternalMessage.builder().payload("test event A").build();
-    InternalMessage message2 = InternalMessage.builder().payload("test event B").build();
-    InternalMessage message3 = InternalMessage.builder().payload("test event C").build();
+    Message message1 = Message.builder().payload("test event A").build();
+    Message message2 = Message.builder().payload("test event B").build();
+    Message message3 = Message.builder().payload("test event C").build();
 
     Event event1 = Event.builder(context).message(message1).flow(flow).session(session).build();
     Event event2 = Event.builder(context).message(message2).flow(flow).session(session).build();
@@ -117,7 +116,7 @@ public class AggregatorTestCase extends AbstractMuleContextTestCase {
           }
 
           return Event.builder(events.getMessageCollectionEvent())
-              .message(InternalMessage.builder().payload(newPayload.toString()).build()).build();
+              .message(Message.builder().payload(newPayload.toString()).build()).build();
         }
       };
     }

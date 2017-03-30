@@ -14,14 +14,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mule.runtime.core.exception.ErrorTypeRepository.CRITICAL_ERROR_TYPE;
-
+import org.mule.runtime.api.exception.MuleRuntimeException;
 import org.mule.runtime.api.message.Error;
 import org.mule.runtime.api.message.ErrorType;
+import org.mule.runtime.api.message.Message;
 import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.MuleContext;
-import org.mule.runtime.api.exception.MuleRuntimeException;
 import org.mule.runtime.core.api.exception.MessagingExceptionHandlerAcceptor;
-import org.mule.runtime.core.api.message.InternalMessage;
 import org.mule.tck.junit4.AbstractMuleTestCase;
 import org.mule.tck.size.SmallTest;
 
@@ -60,7 +59,7 @@ public class ErrorHandlerTestCase extends AbstractMuleTestCase {
 
   @Before
   public void before() {
-    when(mockMuleEvent.getMessage()).thenReturn(InternalMessage.builder().payload("").build());
+    when(mockMuleEvent.getMessage()).thenReturn(Message.builder().payload("").build());
     when(mockMuleEvent.getMuleContext()).thenReturn(mockMuleContext);
     Error mockError = mock(Error.class);
     when(mockError.getErrorType()).thenReturn(mockErrorType);

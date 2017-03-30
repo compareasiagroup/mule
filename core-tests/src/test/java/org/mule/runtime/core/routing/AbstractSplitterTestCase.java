@@ -11,9 +11,10 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-
-import org.mule.runtime.core.api.Event;
+import static org.mule.runtime.api.message.Message.of;
 import org.mule.runtime.api.exception.MuleException;
+import org.mule.runtime.api.message.Message;
+import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.message.InternalMessage;
 import org.mule.runtime.core.api.processor.Processor;
 import org.mule.runtime.core.routing.filters.AcceptAllFilter;
@@ -47,7 +48,7 @@ public class AbstractSplitterTestCase extends AbstractMuleContextTestCase {
     fruitBowl.addFruit(banana);
     fruitBowl.addFruit(orange);
 
-    final Event inEvent = eventBuilder().message(InternalMessage.of(fruitBowl)).build();
+    final Event inEvent = eventBuilder().message(of(fruitBowl)).build();
 
     Event resultEvent = splitter.process(inEvent);
 
@@ -80,7 +81,7 @@ public class AbstractSplitterTestCase extends AbstractMuleContextTestCase {
     fruitBowl.addFruit(banana);
     fruitBowl.addFruit(orange);
 
-    final Event inEvent = eventBuilder().message(InternalMessage.of(fruitBowl)).build();
+    final Event inEvent = eventBuilder().message(of(fruitBowl)).build();
 
     Event resultEvent = splitter.process(inEvent);
 
@@ -105,7 +106,7 @@ public class AbstractSplitterTestCase extends AbstractMuleContextTestCase {
       FruitBowl bowl = (FruitBowl) event.getMessage().getPayload().getValue();
       List<Event> parts = new ArrayList<>();
       for (Fruit fruit : bowl.getFruit()) {
-        parts.add(Event.builder(event).message(InternalMessage.builder().payload(fruit).build()).build());
+        parts.add(Event.builder(event).message(Message.builder().payload(fruit).build()).build());
       }
       return parts;
     }

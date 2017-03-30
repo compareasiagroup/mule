@@ -7,11 +7,10 @@
 package org.mule.tck;
 
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
-
-import org.mule.runtime.core.api.Event;
-import org.mule.runtime.core.api.message.InternalMessage;
 import org.mule.runtime.api.exception.MuleException;
 import org.mule.runtime.api.lifecycle.Disposable;
+import org.mule.runtime.api.message.Message;
+import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.processor.Processor;
 import org.mule.runtime.core.api.source.MessageSource;
 import org.mule.runtime.core.util.ObjectUtils;
@@ -62,8 +61,7 @@ public class SensingNullMessageProcessor implements Processor, Disposable {
 
   private Event append(Event event) {
     return Event.builder(event)
-        .message(InternalMessage.builder().payload(event.getMessage().getPayload().getValue() + appendString).build())
-        .build();
+        .message(Message.builder().payload(event.getMessage().getPayload().getValue() + appendString).build()).build();
   }
 
   private void sleepIfNeeded() {

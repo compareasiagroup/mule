@@ -32,7 +32,8 @@ public class AsyncMessageNotification extends ServerNotification implements Sync
   protected MessagingException exception;
 
   public AsyncMessageNotification(FlowConstruct flowConstruct, Event event, Processor messageProcessor, int action) {
-    super(event, action, flowConstruct.getName());
+    // TODO(pablo.kraan): privileged - flow construct is null. This also happens on a clean branch but as it is async, seems like the exception is ignored
+    super(event, action, flowConstruct != null ? flowConstruct.getName() : "UNKNOWN");
     this.messageProcessor = messageProcessor;
   }
 

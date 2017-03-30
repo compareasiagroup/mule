@@ -11,11 +11,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mule.functional.junit4.matchers.MessageMatchers.hasMediaType;
 import static org.mule.functional.junit4.matchers.MessageMatchers.hasPayload;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
 import org.mule.extensions.jms.test.JmsAbstractTestCase;
 import org.mule.extensions.jms.test.JmsMessageStorage;
 import org.mule.functional.junit4.FlowRunner;
@@ -23,15 +18,20 @@ import org.mule.runtime.api.message.Message;
 import org.mule.runtime.api.metadata.MediaType;
 import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.construct.Flow;
-import org.mule.runtime.core.api.message.InternalMessage;
 import org.mule.tck.junit4.rule.SystemProperty;
 import org.mule.test.runner.RunnerDelegateTo;
-import ru.yandex.qatools.allure.annotations.Description;
-import ru.yandex.qatools.allure.annotations.Features;
-import ru.yandex.qatools.allure.annotations.Stories;
 
 import java.nio.charset.Charset;
 import java.util.Collection;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameter;
+import org.junit.runners.Parameterized.Parameters;
+import ru.yandex.qatools.allure.annotations.Description;
+import ru.yandex.qatools.allure.annotations.Features;
+import ru.yandex.qatools.allure.annotations.Stories;
 
 @Features("JMS Extension")
 @Stories("MimeType propagation through publishing and consuming of messages")
@@ -90,7 +90,7 @@ public class JmsMimeTypePropagationTestCase extends JmsAbstractTestCase {
   public void messageMimeTypeGetsPropagatedThroughPublishAndConsume() throws Exception {
     publish(JSON_MESSAGE, publishedMediaType);
 
-    InternalMessage jmsMessage = consume();
+    Message jmsMessage = consume();
     assertThat(jmsMessage, hasPayload(is(JSON_MESSAGE)));
     assertThat(jmsMessage, hasMediaType(expectedMediaType));
   }
@@ -111,13 +111,13 @@ public class JmsMimeTypePropagationTestCase extends JmsAbstractTestCase {
   @Description("Verifies that the provided MimeType by the message, or the one defined at component or the default one" +
       "get's propagated through a publish-consume operation")
   public void messageMimeTypeGetsPropagatedThroughPublishConsume() throws Exception {
-    InternalMessage jmsMessage = publishConsume(JSON_MESSAGE, publishedMediaType);
+    Message jmsMessage = publishConsume(JSON_MESSAGE, publishedMediaType);
 
     assertThat(jmsMessage, hasPayload(is(JSON_MESSAGE)));
     assertThat(jmsMessage, hasMediaType(expectedMediaType));
   }
 
-  private InternalMessage publishConsume(String message, MediaType mediaType) throws Exception {
+  private Message publishConsume(String message, MediaType mediaType) throws Exception {
     return runWithMediaType(publishConsumerFlow, message, mediaType).getMessage();
   }
 
@@ -133,7 +133,7 @@ public class JmsMimeTypePropagationTestCase extends JmsAbstractTestCase {
     return publisher.run();
   }
 
-  protected InternalMessage consume() throws Exception {
+  protected Message consume() throws Exception {
     return flowRunner(consumerFlow).run().getMessage();
   }
 

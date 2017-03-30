@@ -21,12 +21,11 @@ import static org.mockito.Mockito.when;
 import static org.mule.runtime.core.util.FileUtils.newFile;
 import static org.mule.runtime.core.util.store.QueuePersistenceObjectStore.DEFAULT_QUEUE_STORE;
 import static org.mule.tck.SerializationTestUtils.addJavaSerializerToMockMuleContext;
-
 import org.mule.runtime.api.exception.MuleRuntimeException;
+import org.mule.runtime.api.message.Message;
 import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.MuleContext;
 import org.mule.runtime.core.api.config.MuleConfiguration;
-import org.mule.runtime.core.api.message.InternalMessage;
 import org.mule.runtime.core.api.serialization.SerializationException;
 import org.mule.runtime.core.api.store.ListableObjectStore;
 import org.mule.runtime.core.api.store.ObjectStoreException;
@@ -82,7 +81,7 @@ public class QueuePersistenceObjectStoreTestCase extends AbstractObjectStoreCont
 
   @Override
   public Serializable getStorableValue() {
-    return InternalMessage.builder().payload(TEST_MESSAGE).build();
+    return Message.builder().payload(TEST_MESSAGE).build();
   }
 
   @Override
@@ -161,7 +160,7 @@ public class QueuePersistenceObjectStoreTestCase extends AbstractObjectStoreCont
     QueuePersistenceObjectStore<Serializable> store = getObjectStore();
     String id = UUID.getUUID();
     QueueKey key = new QueueKey(QUEUE_NAME, id);
-    InternalMessage msg = InternalMessage.builder().payload("Hello").build();
+    Message msg = Message.builder().payload("Hello").build();
     Event event = eventBuilder().message(msg).build();
 
     ListableObjectStore<Serializable> monitored = new MonitoredObjectStoreWrapper(store);
@@ -170,7 +169,7 @@ public class QueuePersistenceObjectStoreTestCase extends AbstractObjectStoreCont
     Object item = retrieved.getItem();
     assertTrue(item instanceof Event);
     Event newEvent = (Event) item;
-    InternalMessage newMessage = newEvent.getMessage();
+    Message newMessage = newEvent.getMessage();
     assertNotNull(newMessage);
     assertEquals("Hello", newMessage.getPayload().getValue());
   }

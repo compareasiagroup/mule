@@ -11,9 +11,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.fail;
 import static org.mule.runtime.core.api.Event.setCurrentEvent;
-
+import org.mule.runtime.api.message.Message;
 import org.mule.runtime.api.metadata.DataType;
-import org.mule.runtime.core.api.message.InternalMessage;
 import org.mule.runtime.core.api.transformer.Transformer;
 import org.mule.runtime.core.api.transformer.TransformerException;
 import org.mule.runtime.core.util.IOUtils;
@@ -94,7 +93,7 @@ public abstract class AbstractTransformerTestCase extends AbstractMuleContextTes
     if (this.getRoundTripTransformer() != null) {
       Transformer trans = this.getTransformer();
       Transformer trans2 = this.getRoundTripTransformer();
-      InternalMessage message = InternalMessage.builder().payload(getTestData()).build();
+      Message message = Message.builder().payload(getTestData()).build();
       message = muleContext.getTransformationService().applyTransformers(message, null, asList(trans, trans2));
       Object result = message.getPayload().getValue();
       this.compareRoundtripResults(this.getTestData(), result);

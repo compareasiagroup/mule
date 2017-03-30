@@ -26,10 +26,10 @@ import org.mule.runtime.api.component.location.ComponentLocation;
 import org.mule.runtime.api.exception.LocatedMuleException;
 import org.mule.runtime.api.exception.MuleException;
 import org.mule.runtime.api.i18n.I18nMessageFactory;
+import org.mule.runtime.api.message.Message;
 import org.mule.runtime.api.meta.AnnotatedObject;
 import org.mule.runtime.api.metadata.DataType;
 import org.mule.runtime.core.api.construct.FlowConstruct;
-import org.mule.runtime.core.api.message.InternalMessage;
 import org.mule.runtime.core.api.processor.AbstractProcessor;
 import org.mule.runtime.core.api.processor.Processor;
 import org.mule.runtime.core.api.transformer.TransformerException;
@@ -117,14 +117,14 @@ public class MessagingExceptionTestCase extends AbstractMuleContextTestCase {
     DefaultMuleException causeCauseException = new DefaultMuleException("");
     DefaultMuleException causeException = new DefaultMuleException(causeCauseException);
     MessagingException exception = new MessagingException(CoreMessages.createStaticMessage(""), mockEvent, causeException);
-    assertThat((DefaultMuleException) exception.getRootCause(), is(causeCauseException));
+    assertThat(exception.getRootCause(), is(causeCauseException));
   }
 
   @Test
   public void getCauseExceptionWithNonMuleCause() {
     IOException causeException = new IOException("");
     MessagingException exception = new MessagingException(CoreMessages.createStaticMessage(""), mockEvent, causeException);
-    assertThat((IOException) exception.getRootCause(), is(causeException));
+    assertThat(exception.getRootCause(), is(causeException));
   }
 
   @Test
@@ -132,7 +132,7 @@ public class MessagingExceptionTestCase extends AbstractMuleContextTestCase {
     ConnectException causeCauseException = new ConnectException();
     IOException causeException = new IOException(causeCauseException);
     MessagingException exception = new MessagingException(CoreMessages.createStaticMessage(""), mockEvent, causeException);
-    assertThat((ConnectException) exception.getRootCause(), is(causeCauseException));
+    assertThat(exception.getRootCause(), is(causeCauseException));
   }
 
   @Test
@@ -334,10 +334,10 @@ public class MessagingExceptionTestCase extends AbstractMuleContextTestCase {
     Object payload = mock(Object.class);
     // This has to be done this way since mockito doesn't allow to verify toString()
     when(payload.toString()).then(new FailAnswer("toString() expected not to be called."));
-    InternalMessage muleMessage = InternalMessage.builder().payload(payload).build();
+    Message muleMessage = Message.builder().payload(payload).build();
 
     when(transformationService.transform(muleMessage, DataType.STRING))
-        .thenReturn(InternalMessage.builder().payload(value).build());
+        .thenReturn(Message.builder().payload(value).build());
     when(testEvent.getMessage()).thenReturn(muleMessage);
     MessagingException e = new MessagingException(I18nMessageFactory.createStaticMessage(message), testEvent);
 
@@ -350,7 +350,7 @@ public class MessagingExceptionTestCase extends AbstractMuleContextTestCase {
 
     Event testEvent = mock(Event.class);
     final ByteArrayInputStream payload = new ByteArrayInputStream(new byte[] {});
-    InternalMessage muleMessage = InternalMessage.builder().payload(payload).build();
+    Message muleMessage = Message.builder().payload(payload).build();
     when(testEvent.getMessage()).thenReturn(muleMessage);
     MessagingException e = new MessagingException(I18nMessageFactory.createStaticMessage(message), testEvent);
 
@@ -368,7 +368,7 @@ public class MessagingExceptionTestCase extends AbstractMuleContextTestCase {
     Object payload = mock(Object.class);
     // This has to be done this way since mockito doesn't allow to verify toString()
     when(payload.toString()).then(new FailAnswer("toString() expected not to be called."));
-    InternalMessage muleMessage = InternalMessage.builder().payload(payload).build();
+    Message muleMessage = Message.builder().payload(payload).build();
 
     when(transformationService.transform(muleMessage, DataType.STRING))
         .thenThrow(new TransformerException(CoreMessages.createStaticMessage("exception thrown")));
@@ -384,7 +384,7 @@ public class MessagingExceptionTestCase extends AbstractMuleContextTestCase {
     MuleException.verboseExceptions = false;
 
     Event testEvent = mock(Event.class);
-    InternalMessage muleMessage = spy(InternalMessage.builder().payload("").build());
+    Message muleMessage = spy(Message.builder().payload("").build());
     when(testEvent.getMessage()).thenReturn(muleMessage);
     MessagingException e = new MessagingException(I18nMessageFactory.createStaticMessage(message), testEvent);
 

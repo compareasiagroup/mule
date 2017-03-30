@@ -11,6 +11,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.mule.runtime.api.message.Message;
 import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.EventContext;
 import org.mule.runtime.core.api.MuleContext;
@@ -52,7 +53,7 @@ public class AggregationTestCase extends AbstractIntegrationTestCase {
     MuleClient client = muleContext.getClient();
 
     flowRunner("SplitterFlow").withPayload(PAYLOAD).run();
-    InternalMessage msg = client.request("test://collectionCreated", RECEIVE_TIMEOUT).getRight().get();
+    Message msg = client.request("test://collectionCreated", RECEIVE_TIMEOUT).getRight().get();
     assertNotNull(msg);
     assertTrue(msg.getPayload().getValue() instanceof List);
 
@@ -72,7 +73,7 @@ public class AggregationTestCase extends AbstractIntegrationTestCase {
   public void testCustomAggregator() throws Exception {
     MuleClient client = muleContext.getClient();
     flowRunner("SplitterFlow2").withPayload(PAYLOAD).run();
-    InternalMessage msg = client.request("test://collectionCreated2", RECEIVE_TIMEOUT).getRight().get();
+    Message msg = client.request("test://collectionCreated2", RECEIVE_TIMEOUT).getRight().get();
     assertNotNull(msg);
     assertNotNull(msg.getPayload().getValue());
     assertTrue(msg.getPayload().getValue() instanceof List);
@@ -121,7 +122,7 @@ public class AggregationTestCase extends AbstractIntegrationTestCase {
         fc = event.getFlowConstruct();
       }
 
-      return Event.builder(executionContext).message(InternalMessage.builder().payload(eventList).build())
+      return Event.builder(executionContext).message(Message.builder().payload(eventList).build())
           .flow(fc).build();
     }
   }

@@ -7,13 +7,13 @@
 package org.mule.runtime.core.processor;
 
 import static org.mule.runtime.core.api.lifecycle.LifecycleUtils.initialiseIfNeeded;
-import org.mule.runtime.core.api.Event;
 import org.mule.runtime.api.exception.MuleException;
-import org.mule.runtime.core.api.message.InternalMessage;
 import org.mule.runtime.api.lifecycle.Disposable;
 import org.mule.runtime.api.lifecycle.InitialisationException;
 import org.mule.runtime.api.lifecycle.Startable;
 import org.mule.runtime.api.lock.LockFactory;
+import org.mule.runtime.api.message.Message;
+import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.processor.Processor;
 import org.mule.runtime.core.api.store.ObjectStore;
 import org.mule.runtime.core.api.store.ObjectStoreException;
@@ -21,8 +21,8 @@ import org.mule.runtime.core.api.store.ObjectStoreManager;
 import org.mule.runtime.core.api.transformer.TransformerException;
 import org.mule.runtime.core.config.i18n.CoreMessages;
 import org.mule.runtime.core.exception.MessageRedeliveredException;
-import org.mule.runtime.core.transformer.simple.ByteArrayToHexString;
 import org.mule.runtime.core.internal.transformer.simple.ObjectToByteArray;
+import org.mule.runtime.core.transformer.simple.ByteArrayToHexString;
 import org.mule.runtime.core.util.store.ObjectStorePartition;
 import org.mule.runtime.core.util.store.ProvidedObjectStoreWrapper;
 
@@ -227,7 +227,8 @@ public class IdempotentRedeliveryPolicy extends AbstractRedeliveryPolicy {
       byte[] bytes = (byte[]) objectToByteArray.transform(payload);
       if (payload instanceof InputStream) {
         // We've consumed the stream.
-        event = Event.builder(event).message(InternalMessage.builder(event.getMessage()).payload(bytes).build()).build();
+        // TODO(pablo.kraan): privileged - what is the purpose of create this new event?
+        event = Event.builder(event).message(Message.builder(event.getMessage()).payload(bytes).build()).build();
       }
       MessageDigest md = MessageDigest.getInstance(messageDigestAlgorithm);
       byte[] digestedBytes = md.digest(bytes);

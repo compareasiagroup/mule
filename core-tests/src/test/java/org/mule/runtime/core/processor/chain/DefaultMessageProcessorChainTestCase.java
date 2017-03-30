@@ -32,11 +32,11 @@ import static org.mule.tck.junit4.AbstractReactiveProcessorTestCase.Mode.BLOCKIN
 import static org.mule.tck.junit4.AbstractReactiveProcessorTestCase.Mode.NON_BLOCKING;
 import static org.mule.tck.util.MuleContextUtils.mockContextWithServices;
 import static reactor.core.publisher.Flux.from;
-
 import org.mule.runtime.api.exception.MuleException;
 import org.mule.runtime.api.lifecycle.InitialisationException;
 import org.mule.runtime.api.lifecycle.Lifecycle;
 import org.mule.runtime.api.message.ErrorType;
+import org.mule.runtime.api.message.Message;
 import org.mule.runtime.core.DefaultEventContext;
 import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.EventContext;
@@ -48,7 +48,6 @@ import org.mule.runtime.core.api.construct.FlowConstruct;
 import org.mule.runtime.core.api.construct.FlowConstructAware;
 import org.mule.runtime.core.api.context.MuleContextAware;
 import org.mule.runtime.core.api.execution.ExceptionContextProvider;
-import org.mule.runtime.core.api.message.InternalMessage;
 import org.mule.runtime.core.api.processor.MessageProcessorBuilder;
 import org.mule.runtime.core.api.processor.MessageProcessorChain;
 import org.mule.runtime.core.api.processor.Processor;
@@ -694,9 +693,9 @@ public class DefaultMessageProcessorChainTestCase extends AbstractReactiveProces
 
     Event event = getTestEventUsingFlow("0");
     final MessageProcessorChain chain = newChain(singletonList(scatterGatherRouter));
-    InternalMessage result = process(chain, Event.builder(event).message(event.getMessage()).build()).getMessage();
+    Message result = process(chain, Event.builder(event).message(event.getMessage()).build()).getMessage();
     assertThat(result.getPayload().getValue(), instanceOf(List.class));
-    List<InternalMessage> resultMessage = (List<InternalMessage>) result.getPayload().getValue();
+    List<Message> resultMessage = (List<Message>) result.getPayload().getValue();
     assertThat(resultMessage.stream().map(msg -> msg.getPayload().getValue()).collect(toList()).toArray(),
                is(equalTo(new String[] {"01", "02", "03"})));
 
@@ -770,7 +769,7 @@ public class DefaultMessageProcessorChainTestCase extends AbstractReactiveProces
     @Override
     public Event process(Event event) throws MuleException {
       return Event.builder(event)
-          .message(InternalMessage.builder().payload(event.getMessage().getPayload().getValue() + "MessageProcessor").build())
+          .message(Message.builder().payload(event.getMessage().getPayload().getValue() + "MessageProcessor").build())
           .build();
     }
   }
@@ -780,7 +779,7 @@ public class DefaultMessageProcessorChainTestCase extends AbstractReactiveProces
     @Override
     public Event process(Event event) throws MuleException {
       return processNext(Event.builder(event)
-          .message(InternalMessage.builder().payload(event.getMessage().getPayload().getValue() + "InterceptingMessageProcessor")
+          .message(Message.builder().payload(event.getMessage().getPayload().getValue() + "InterceptingMessageProcessor")
               .build())
           .build());
     }
@@ -840,7 +839,7 @@ public class DefaultMessageProcessorChainTestCase extends AbstractReactiveProces
     private Event innerProcess(Event event) {
       this.event = event;
       Event result = Event.builder(event)
-          .message(InternalMessage.builder().payload(event.getMessage().getPayload().getValue() + appendString).build()).build();
+          .message(Message.builder().payload(event.getMessage().getPayload().getValue() + appendString).build()).build();
       this.resultEvent = result;
       return result;
     }
@@ -934,14 +933,14 @@ public class DefaultMessageProcessorChainTestCase extends AbstractReactiveProces
 
     private Event appendAfter(Event after) {
       return Event.builder(after)
-          .message(InternalMessage.builder().payload(after.getMessage().getPayload().getValue() + "after" + appendString)
+          .message(Message.builder().payload(after.getMessage().getPayload().getValue() + "after" + appendString)
               .build())
           .build();
     }
 
     private Event appendBefore(Event before) {
       return Event.builder(before)
-          .message(InternalMessage.builder().payload(before.getMessage().getPayload().getValue() + "before" + appendString)
+          .message(Message.builder().payload(before.getMessage().getPayload().getValue() + "before" + appendString)
               .build())
           .build();
     }
@@ -1025,7 +1024,7 @@ public class DefaultMessageProcessorChainTestCase extends AbstractReactiveProces
   protected Event getTestEventUsingFlow(Object data) {
     Event event = mock(Event.class);
     EventContext eventContext = DefaultEventContext.create(flow, "");
-    InternalMessage message = InternalMessage.builder().payload(data).build();
+    Message message = Message.builder().payload(data).build();
     when(event.getFlowCallStack()).thenReturn(new DefaultFlowCallStack());
     when(event.getMessage()).thenReturn(message);
     when(event.getSession()).thenReturn(mock(MuleSession.class));
