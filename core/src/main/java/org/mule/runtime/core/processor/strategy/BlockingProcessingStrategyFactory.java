@@ -6,7 +6,10 @@
  */
 package org.mule.runtime.core.processor.strategy;
 
+import static org.mule.runtime.core.api.rx.Exceptions.rxExceptionToMuleException;
+import static reactor.core.Exceptions.unwrap;
 import static reactor.core.publisher.Flux.from;
+import static reactor.core.publisher.Mono.empty;
 import static reactor.core.publisher.Mono.just;
 
 import org.mule.runtime.core.api.Event;
@@ -18,7 +21,9 @@ import org.mule.runtime.core.api.processor.ReactiveProcessor;
 import org.mule.runtime.core.api.processor.Sink;
 import org.mule.runtime.core.api.processor.strategy.ProcessingStrategy;
 import org.mule.runtime.core.api.processor.strategy.ProcessingStrategyFactory;
+import org.mule.runtime.core.api.rx.Exceptions;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 import org.reactivestreams.Publisher;
@@ -53,7 +58,13 @@ public class BlockingProcessingStrategyFactory implements ProcessingStrategyFact
         @Override
         public Function<Publisher<Event>, Publisher<Event>> onProcessor(Processor processor,
                                                                         Function<Publisher<Event>, Publisher<Event>> processorFunction) {
-          return publisher -> from(publisher).map(event -> just(event).transform(processorFunction).block());
+          return publisher -> from(publisher).handle((event, sink) -> {
+            try {
+              sink.next(just(event).transform(processor).block());
+            } catch (Throwable throwable) {
+              sink.error(unwrap(throwable));
+            }
+          });
         }
       };
 
