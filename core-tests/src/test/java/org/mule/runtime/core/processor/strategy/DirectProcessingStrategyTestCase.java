@@ -10,29 +10,28 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
-import static org.mule.runtime.core.processor.strategy.SynchronousProcessingStrategyFactory.SYNCHRONOUS_PROCESSING_STRATEGY_INSTANCE;
+import static org.mule.runtime.core.processor.strategy.DirectProcessingStrategyFactory.DIRECT_PROCESSING_STRATEGY_INSTANCE;
 
 import org.mule.runtime.core.api.MuleContext;
 import org.mule.runtime.core.api.processor.strategy.ProcessingStrategy;
 import org.mule.runtime.core.transaction.TransactionCoordination;
 import org.mule.tck.testmodels.mule.TestTransaction;
 
-import org.hamcrest.Matchers;
 import ru.yandex.qatools.allure.annotations.Description;
 import ru.yandex.qatools.allure.annotations.Features;
 import ru.yandex.qatools.allure.annotations.Stories;
 
 @Features("Processing Strategies")
 @Stories("Synchronous Processing Strategy")
-public class SynchronousProcessingStrategyTestCase extends AbstractProcessingStrategyTestCase {
+public class DirectProcessingStrategyTestCase extends AbstractProcessingStrategyTestCase {
 
-  public SynchronousProcessingStrategyTestCase(Mode mode) {
+  public DirectProcessingStrategyTestCase(Mode mode) {
     super(mode);
   }
 
   @Override
   protected ProcessingStrategy createProcessingStrategy(MuleContext muleContext, String schedulersNamePrefix) {
-    return SYNCHRONOUS_PROCESSING_STRATEGY_INSTANCE;
+    return DIRECT_PROCESSING_STRATEGY_INSTANCE;
   }
 
   @Override
@@ -120,6 +119,21 @@ public class SynchronousProcessingStrategyTestCase extends AbstractProcessingStr
     process(flow, testEvent());
 
     assertSynchronous(1);
+  }
+
+  @Override
+  @Description("When the ReactorProcessingStrategy is configured and a transaction is active processing fails with an error")
+  public void asyncCpuLight() throws Exception {
+    super.asyncCpuLight();
+    assertAsyncCpuLight();
+  }
+
+  protected void assertAsyncCpuLight() {
+    assertThat(threads, hasSize(2));
+    assertThat(threads.stream().filter(name -> name.startsWith(IO)).count(), equalTo(0l));
+    assertThat(threads.stream().filter(name -> name.startsWith(CPU_LIGHT)).count(), equalTo(0l));
+    assertThat(threads.stream().filter(name -> name.startsWith(CPU_INTENSIVE)).count(), equalTo(0l));
+    assertThat(threads.stream().filter(name -> name.startsWith(CUSTOM)).count(), equalTo(1l));
   }
 
   protected void assertSynchronous(int concurrency) {
