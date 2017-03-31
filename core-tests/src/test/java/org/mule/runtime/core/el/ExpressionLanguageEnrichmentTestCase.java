@@ -90,7 +90,7 @@ public class ExpressionLanguageEnrichmentTestCase extends AbstractELTestCase {
 
   @Test
   public void enrichFlowVariable() throws Exception {
-    Event event = eventBuilder().message(Message.builder().payload("").build()).build();
+    Event event = eventBuilder().message(of("")).build();
     Event.Builder eventBuilder = Event.builder(event);
     expressionLanguage.enrich("flowVars['foo']", event, eventBuilder, flowConstruct, "bar");
     assertThat(eventBuilder.build().getVariable("foo").getValue(), is("bar"));
@@ -99,7 +99,7 @@ public class ExpressionLanguageEnrichmentTestCase extends AbstractELTestCase {
 
   @Test
   public void enrichSessionVariable() throws Exception {
-    Event event = eventBuilder().message(Message.builder().payload("").build()).build();
+    Event event = eventBuilder().message(Message.of("")).build();
     Event.Builder eventBuilder = Event.builder(event);
     expressionLanguage.enrich("sessionVars['foo']", event, eventBuilder, flowConstruct, "bar");
     assertThat(eventBuilder.build().getSession().getProperty("foo"), equalTo("bar"));

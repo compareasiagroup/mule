@@ -102,7 +102,7 @@ public class AsynchronousUntilSuccessfulProcessingStrategyTestCase extends Abstr
     when(mockUntilSuccessfulConfiguration.getRoute()).thenReturn(mockRoute);
     when(mockUntilSuccessfulConfiguration.getAckExpression()).thenReturn(null);
     when(mockUntilSuccessfulConfiguration.getMaxRetries()).thenReturn(DEFAULT_RETRIES);
-    final Message mockMessage = Message.builder().payload("").build();
+    final Message mockMessage = Message.of("");
     event = Event.builder(DefaultEventContext.create(mockFlow, TEST_CONNECTOR)).message(mockMessage).build();
     when(mockUntilSuccessfulConfiguration.getObjectStore()).thenReturn(objectStore);
     objectStore.clear();

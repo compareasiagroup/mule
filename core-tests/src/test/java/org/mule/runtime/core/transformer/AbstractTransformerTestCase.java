@@ -10,6 +10,7 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.fail;
+import static org.mule.runtime.api.message.Message.of;
 import static org.mule.runtime.core.api.Event.setCurrentEvent;
 import org.mule.runtime.api.message.Message;
 import org.mule.runtime.api.metadata.DataType;
@@ -93,7 +94,7 @@ public abstract class AbstractTransformerTestCase extends AbstractMuleContextTes
     if (this.getRoundTripTransformer() != null) {
       Transformer trans = this.getTransformer();
       Transformer trans2 = this.getRoundTripTransformer();
-      Message message = Message.builder().payload(getTestData()).build();
+      Message message = of(getTestData());
       message = muleContext.getTransformationService().applyTransformers(message, null, asList(trans, trans2));
       Object result = message.getPayload().getValue();
       this.compareRoundtripResults(this.getTestData(), result);

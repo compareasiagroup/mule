@@ -12,7 +12,6 @@ import static org.mule.runtime.api.message.Message.of;
 import static org.mule.runtime.core.api.Event.setCurrentEvent;
 import static org.mule.tck.util.MuleContextUtils.eventBuilder;
 import org.mule.runtime.api.exception.MuleException;
-import org.mule.runtime.api.message.Message;
 import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.util.StringMessageUtils;
 import org.mule.runtime.core.util.StringUtils;
@@ -260,7 +259,7 @@ public abstract class AbstractMuleTestCase {
 
   protected Event nullPayloadEvent() throws MuleException {
     if (_nullPayloadEvent == null) {
-      _nullPayloadEvent = eventBuilder().message(Message.builder().nullPayload().build()).build();
+      _nullPayloadEvent = eventBuilder().message(of(null)).build();
     }
     return _nullPayloadEvent;
   }

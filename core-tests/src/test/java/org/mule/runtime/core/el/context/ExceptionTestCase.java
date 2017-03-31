@@ -12,6 +12,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mule.runtime.api.message.Message.of;
 import static org.mule.tck.MuleTestUtils.getTestFlow;
 import org.mule.runtime.api.message.Error;
 import org.mule.runtime.api.message.Message;
@@ -69,7 +70,6 @@ public class ExceptionTestCase extends AbstractELTestCase {
   }
 
   private Event createEvent() throws Exception {
-    return Event.builder(context).message(Message.builder().payload("").build()).flow(flowConstruct).error(mockError)
-        .build();
+    return Event.builder(context).message(of("")).flow(flowConstruct).error(mockError).build();
   }
 }

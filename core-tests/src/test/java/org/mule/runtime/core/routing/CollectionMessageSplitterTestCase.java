@@ -117,7 +117,7 @@ public class CollectionMessageSplitterTestCase extends AbstractMuleContextTestCa
   public void testEmptySequence() throws Exception {
     Object payload = Collections.emptySet();
     MuleSession session = new DefaultMuleSession();
-    Message toSplit = Message.builder().payload(payload).build();
+    Message toSplit = Message.of(payload);
     CollectionSplitter splitter = new CollectionSplitter();
     splitter.setMuleContext(muleContext);
     Event event = eventBuilder().message(toSplit).session(session).build();

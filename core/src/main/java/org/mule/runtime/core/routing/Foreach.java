@@ -9,6 +9,7 @@ package org.mule.runtime.core.routing;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singletonList;
 import static org.mule.runtime.api.exception.LocatedMuleException.INFO_LOCATION_KEY;
+import static org.mule.runtime.api.message.Message.of;
 import static org.mule.runtime.core.api.processor.MessageProcessors.newChain;
 import org.mule.runtime.api.exception.MuleException;
 import org.mule.runtime.api.lifecycle.Initialisable;
@@ -212,7 +213,7 @@ public class Foreach extends AbstractMessageProcessorOwner implements Initialisa
         Set<Map.Entry<?, ?>> set = ((Map) payload).entrySet();
         for (Entry<?, ?> entry : set) {
           // TODO MULE-9502 Support "key" flowVar with MapSplitter in Mule 4
-          list.add(Event.builder(event).message(Message.builder().payload(entry.getValue()).build()).build());
+          list.add(Event.builder(event).message(of(entry.getValue())).build());
         }
         return new CollectionMessageSequence(list);
       }

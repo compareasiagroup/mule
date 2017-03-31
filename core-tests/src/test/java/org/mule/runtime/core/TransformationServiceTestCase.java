@@ -16,6 +16,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mule.runtime.api.message.Message.of;
 import org.mule.runtime.api.exception.MuleException;
 import org.mule.runtime.api.message.Message;
 import org.mule.runtime.api.metadata.DataType;
@@ -70,7 +71,7 @@ public class TransformationServiceTestCase extends AbstractMuleTestCase {
     // Converter(B->C), payload A: FAIL
     Transformer converter1 = new MockConverterBuilder().from(dataTypeB).to(dataTypeC).build();
 
-    Message message = Message.builder().payload(new A()).build();
+    Message message = of(new A());
 
     try {
       transformationService.applyTransformers(message, null, converter1);
@@ -88,7 +89,7 @@ public class TransformationServiceTestCase extends AbstractMuleTestCase {
 
     when(conversionResolver.resolve(any(DataType.class), anyList())).thenReturn(converter2);
 
-    Message message = Message.builder().payload(new B()).build();
+    Message message = of(new B());
 
     message = transformationService.applyTransformers(message, null, converter1);
 
@@ -102,7 +103,7 @@ public class TransformationServiceTestCase extends AbstractMuleTestCase {
     // Converter(B->C), payload B: OK
     Transformer converter1 = new MockConverterBuilder().from(dataTypeB).to(dataTypeC).returning(new C()).build();
 
-    Message message = Message.builder().payload(new B()).build();
+    Message message = of(new B());
     message = transformationService.applyTransformers(message, null, converter1);
 
     assertTrue(message.getPayload().getValue() instanceof C);
@@ -114,7 +115,7 @@ public class TransformationServiceTestCase extends AbstractMuleTestCase {
     // Converter(B->C), payload C: OK - skips transformer but C is the expected output type -> OK
     Transformer converter1 = new MockConverterBuilder().from(dataTypeB).to(dataTypeC).build();
 
-    Message message = Message.builder().payload(new C()).build();
+    Message message = of(new C());
     message = transformationService.applyTransformers(message, null, converter1);
 
     assertTrue(message.getPayload().getValue() instanceof C);
@@ -127,7 +128,7 @@ public class TransformationServiceTestCase extends AbstractMuleTestCase {
     Transformer converter1 = new MockConverterBuilder().from(dataTypeB).to(dataTypeC).build();
     Transformer converter2 = new MockConverterBuilder().from(dataTypeC).to(dataTypeD).build();
 
-    Message message = Message.builder().payload(new A()).build();
+    Message message = of(new A());
     try {
       transformationService.applyTransformers(message, null, converter1, converter2);
       fail("Transformation is supposed to fail");
@@ -143,7 +144,7 @@ public class TransformationServiceTestCase extends AbstractMuleTestCase {
     Transformer converter1 = new MockConverterBuilder().from(dataTypeB).to(dataTypeC).returning(new C()).build();
     Transformer converter2 = new MockConverterBuilder().from(dataTypeC).to(dataTypeD).returning(new D()).build();
 
-    Message message = Message.builder().payload(new B()).build();
+    Message message = of(new B());
     message = transformationService.applyTransformers(message, null, converter1, converter2);
 
     assertTrue(message.getPayload().getValue() instanceof D);
@@ -157,7 +158,7 @@ public class TransformationServiceTestCase extends AbstractMuleTestCase {
     Transformer converter1 = new MockConverterBuilder().from(dataTypeB).to(dataTypeC).build();
     Transformer converter2 = new MockConverterBuilder().from(dataTypeC).to(dataTypeD).returning(new D()).build();
 
-    Message message = Message.builder().payload(new C()).build();
+    Message message = of(new C());
     message = transformationService.applyTransformers(message, null, converter1, converter2);
 
     assertTrue(message.getPayload().getValue() instanceof D);
@@ -172,7 +173,7 @@ public class TransformationServiceTestCase extends AbstractMuleTestCase {
     Transformer converter1 = new MockConverterBuilder().from(dataTypeB).to(dataTypeC).build();
     Transformer converter2 = new MockConverterBuilder().from(dataTypeC).to(dataTypeD).build();
 
-    Message message = Message.builder().payload(new D()).build();
+    Message message = of(new D());
     message = transformationService.applyTransformers(message, null, converter1, converter2);
 
     assertTrue(message.getPayload().getValue() instanceof D);
@@ -186,7 +187,7 @@ public class TransformationServiceTestCase extends AbstractMuleTestCase {
     Transformer transformer1 = new MockTransformerBuilder().from(dataTypeB).to(dataTypeD).build();
     Transformer converter2 = new MockConverterBuilder().from(dataTypeC).to(dataTypeD).build();
 
-    Message message = Message.builder().payload(new A()).build();
+    Message message = of(new A());
     try {
       transformationService.applyTransformers(message, null, transformer1, converter2);
       fail("Transformation is supposed to fail");
@@ -203,7 +204,7 @@ public class TransformationServiceTestCase extends AbstractMuleTestCase {
     Transformer transformer1 = new MockTransformerBuilder().from(dataTypeB).to(dataTypeD).returning(new D()).build();
     Transformer converter2 = new MockConverterBuilder().from(dataTypeC).to(dataTypeD).build();
 
-    Message message = Message.builder().payload(new B()).build();
+    Message message = of(new B());
     message = transformationService.applyTransformers(message, null, transformer1, converter2);
 
     assertTrue(message.getPayload().getValue() instanceof D);
@@ -217,7 +218,7 @@ public class TransformationServiceTestCase extends AbstractMuleTestCase {
     Transformer transformer1 = new MockTransformerBuilder().from(dataTypeB).to(dataTypeD).build();
     Transformer converter2 = new MockConverterBuilder().from(dataTypeC).to(dataTypeD).build();
 
-    Message message = Message.builder().payload(new C()).build();
+    Message message = of(new C());
     try {
       transformationService.applyTransformers(message, null, transformer1, converter2);
       fail("Transformation is supposed to fail");
@@ -233,7 +234,7 @@ public class TransformationServiceTestCase extends AbstractMuleTestCase {
     Transformer transformer1 = new MockTransformerBuilder().from(dataTypeB).to(dataTypeD).build();
     Transformer converter2 = new MockConverterBuilder().from(dataTypeC).to(dataTypeD).build();
 
-    Message message = Message.builder().payload(new D()).build();
+    Message message = of(new D());
     try {
       transformationService.applyTransformers(message, null, transformer1, converter2);
       fail("Transformation is supposed to fail");
@@ -249,7 +250,7 @@ public class TransformationServiceTestCase extends AbstractMuleTestCase {
     Transformer converter1 = new MockConverterBuilder().from(dataTypeB).to(dataTypeD).build();
     Transformer transformer2 = new MockTransformerBuilder().from(dataTypeC).to(dataTypeD).build();
 
-    Message message = Message.builder().payload(new A()).build();
+    Message message = of(new A());
 
     try {
       transformationService.applyTransformers(message, null, converter1, transformer2);
@@ -266,7 +267,7 @@ public class TransformationServiceTestCase extends AbstractMuleTestCase {
     Transformer converter1 = new MockConverterBuilder().from(dataTypeB).to(dataTypeD).returning(new D()).build();
     Transformer transformer2 = new MockTransformerBuilder().from(dataTypeC).to(dataTypeD).build();
 
-    Message message = Message.builder().payload(new B()).build();
+    Message message = of(new B());
     try {
       transformationService.applyTransformers(message, null, converter1, transformer2);
       fail("Transformation is supposed to fail");
@@ -282,7 +283,7 @@ public class TransformationServiceTestCase extends AbstractMuleTestCase {
     Transformer converter1 = new MockConverterBuilder().from(dataTypeB).to(dataTypeD).build();
     Transformer transformer2 = new MockTransformerBuilder().from(dataTypeC).to(dataTypeD).returning(new D()).build();
 
-    Message message = Message.builder().payload(new C()).build();
+    Message message = of(new C());
     message = transformationService.applyTransformers(message, null, converter1, transformer2);
 
     assertTrue(message.getPayload().getValue() instanceof D);
@@ -296,7 +297,7 @@ public class TransformationServiceTestCase extends AbstractMuleTestCase {
     Transformer converter1 = new MockConverterBuilder().from(dataTypeB).to(dataTypeD).build();
     Transformer transformer2 = new MockTransformerBuilder().from(dataTypeC).to(dataTypeD).build();
 
-    Message message = Message.builder().payload(new D()).build();
+    Message message = of(new D());
     try {
       transformationService.applyTransformers(message, null, converter1, transformer2);
       fail("Transformation is supposed to fail");
@@ -312,7 +313,7 @@ public class TransformationServiceTestCase extends AbstractMuleTestCase {
     Transformer transformer1 = new MockTransformerBuilder().from(dataTypeB).to(dataTypeD).build();
     Transformer transformer2 = new MockTransformerBuilder().from(dataTypeC).to(dataTypeD).build();
 
-    Message message = Message.builder().payload(new A()).build();
+    Message message = of(new A());
 
     try {
       transformationService.applyTransformers(message, null, transformer1, transformer2);
@@ -329,7 +330,7 @@ public class TransformationServiceTestCase extends AbstractMuleTestCase {
     Transformer transformer1 = new MockTransformerBuilder().from(dataTypeB).to(dataTypeD).returning(new D()).build();
     Transformer transformer2 = new MockTransformerBuilder().from(dataTypeC).to(dataTypeD).build();
 
-    Message message = Message.builder().payload(new B()).build();
+    Message message = of(new B());
 
     try {
       transformationService.applyTransformers(message, null, transformer1, transformer2);
@@ -346,7 +347,7 @@ public class TransformationServiceTestCase extends AbstractMuleTestCase {
     Transformer transformer1 = new MockTransformerBuilder().from(dataTypeB).to(dataTypeD).build();
     Transformer transformer2 = new MockTransformerBuilder().from(dataTypeC).to(dataTypeD).build();
 
-    Message message = Message.builder().payload(new C()).build();
+    Message message = of(new C());
 
     try {
       transformationService.applyTransformers(message, null, transformer1, transformer2);
@@ -363,7 +364,7 @@ public class TransformationServiceTestCase extends AbstractMuleTestCase {
     Transformer transformer1 = new MockTransformerBuilder().from(dataTypeB).to(dataTypeD).build();
     Transformer transformer2 = new MockTransformerBuilder().from(dataTypeC).to(dataTypeD).build();
 
-    Message message = Message.builder().payload(new D()).build();
+    Message message = of(new D());
 
     try {
       transformationService.applyTransformers(message, null, transformer1, transformer2);
@@ -379,7 +380,7 @@ public class TransformationServiceTestCase extends AbstractMuleTestCase {
     // Transformer(B->C), payload A: FAIL
     Transformer transformer1 = new MockTransformerBuilder().from(dataTypeB).to(dataTypeC).build();
 
-    Message message = Message.builder().payload(new A()).build();
+    Message message = of(new A());
 
     try {
       transformationService.applyTransformers(message, null, transformer1);
@@ -394,7 +395,7 @@ public class TransformationServiceTestCase extends AbstractMuleTestCase {
     // Transformer(B->C), payload B: OK
     Transformer transformer1 = new MockTransformerBuilder().from(dataTypeB).to(dataTypeC).returning(new C()).build();
 
-    Message message = Message.builder().payload(new B()).build();
+    Message message = of(new B());
     message = transformationService.applyTransformers(message, null, transformer1);
 
     assertTrue(message.getPayload().getValue() instanceof C);
@@ -406,7 +407,7 @@ public class TransformationServiceTestCase extends AbstractMuleTestCase {
     // Transformer(B->C), payload C: FAIL
     Transformer transformer1 = new MockTransformerBuilder().from(dataTypeB).to(dataTypeC).build();
 
-    Message message = Message.builder().payload(new C()).build();
+    Message message = of(new C());
     try {
       transformationService.applyTransformers(message, null, transformer1);
       fail("Transformation is supposed to fail");
@@ -421,7 +422,7 @@ public class TransformationServiceTestCase extends AbstractMuleTestCase {
 
     when(conversionResolver.resolve(any(DataType.class), anyList())).thenReturn(null);
 
-    Message message = Message.builder().payload("TEST").build();
+    Message message = of("TEST");
 
     try {
       transformationService.applyTransformers(message, null, transformer);
@@ -439,7 +440,7 @@ public class TransformationServiceTestCase extends AbstractMuleTestCase {
 
     when(conversionResolver.resolve(any(DataType.class), anyList())).thenReturn(converter);
 
-    Message message = Message.builder().payload("TEST").build();
+    Message message = of("TEST");
     message = transformationService.applyTransformers(message, null, transformer);
 
     assertEquals("bar", message.getPayload().getValue());

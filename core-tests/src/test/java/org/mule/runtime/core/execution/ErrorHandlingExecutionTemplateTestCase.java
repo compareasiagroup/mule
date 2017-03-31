@@ -17,11 +17,11 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mule.runtime.api.message.Message.of;
 import static org.mule.runtime.core.execution.ErrorHandlingExecutionTemplate.createErrorHandlingExecutionTemplate;
 import static org.mule.runtime.core.transaction.TransactionTemplateTestUtils.getEmptyTransactionCallback;
 import static org.mule.runtime.core.transaction.TransactionTemplateTestUtils.getFailureTransactionCallback;
 import static org.mule.runtime.core.transaction.TransactionTemplateTestUtils.getFailureTransactionCallbackStartsTransaction;
-import org.mule.runtime.api.message.Message;
 import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.MuleContext;
 import org.mule.runtime.core.api.construct.FlowConstruct;
@@ -68,7 +68,7 @@ public class ErrorHandlingExecutionTemplateTestCase extends AbstractMuleTestCase
 
   @Before
   public void unbindTransaction() throws Exception {
-    when(mockEvent.getMessage()).thenReturn(Message.builder().payload("").build());
+    when(mockEvent.getMessage()).thenReturn(of(""));
 
     Transaction currentTransaction = TransactionCoordination.getInstance().getTransaction();
     if (currentTransaction != null) {

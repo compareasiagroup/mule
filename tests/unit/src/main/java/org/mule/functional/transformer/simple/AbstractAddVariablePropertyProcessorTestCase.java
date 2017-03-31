@@ -14,6 +14,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mule.runtime.api.message.Message.of;
 import static org.mule.runtime.api.metadata.DataType.OBJECT;
 import static org.mule.runtime.api.metadata.DataType.STRING;
 import static org.mule.runtime.api.metadata.MediaType.APPLICATION_XML;
@@ -82,7 +83,7 @@ public abstract class AbstractAddVariablePropertyProcessorTestCase extends Abstr
     when(mockExpressionManager.evaluate(eq(EXPRESSION), any(Event.class))).thenReturn(typedValue);
     addVariableProcessor.setMuleContext(mockMuleContext);
 
-    message = Message.builder().payload("").build();
+    message = of("");
     event = eventBuilder().message(message).session(mockSession).build();
   }
 

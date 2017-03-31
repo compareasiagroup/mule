@@ -10,6 +10,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mule.runtime.api.message.Message.of;
 import static org.mule.tck.MuleTestUtils.getTestFlow;
 import org.mule.runtime.api.exception.MuleException;
 import org.mule.runtime.api.message.Message;
@@ -50,9 +51,9 @@ public class ResequencerTestCase extends AbstractMuleContextTestCase {
 
     EventContext context = DefaultEventContext.create(flow, TEST_CONNECTOR, "foo");
 
-    Message message1 = Message.builder().payload("test event A").build();
-    Message message2 = Message.builder().payload("test event B").build();
-    Message message3 = Message.builder().payload("test event C").build();
+    Message message1 = of("test event A");
+    Message message2 = of("test event B");
+    Message message3 = of("test event C");
 
     Event event1 = Event.builder(context).message(message1).flow(getTestFlow(muleContext)).session(session).build();
     Event event2 = Event.builder(context).message(message2).flow(getTestFlow(muleContext)).session(session).build();
@@ -84,9 +85,9 @@ public class ResequencerTestCase extends AbstractMuleContextTestCase {
 
     EventContext context = DefaultEventContext.create(flow, TEST_CONNECTOR, "foo");
 
-    Message message1 = Message.builder().payload("test event A").build();
-    Message message2 = Message.builder().payload("test event B").build();
-    Message message3 = Message.builder().payload("test event C").build();
+    Message message1 = of("test event A");
+    Message message2 = of("test event B");
+    Message message3 = of("test event C");
 
     Event event1 = Event.builder(context).message(message1).flow(getTestFlow(muleContext)).session(session).build();
     Event event2 = Event.builder(context).message(message2).flow(getTestFlow(muleContext)).session(session).build();

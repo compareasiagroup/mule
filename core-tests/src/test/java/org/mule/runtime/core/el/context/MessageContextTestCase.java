@@ -49,7 +49,7 @@ public class MessageContextTestCase extends AbstractELTestCase {
     event = mock(Event.class, RETURNS_DEEP_STUBS);
     when(event.getFlowCallStack()).thenReturn(new DefaultFlowCallStack());
     when(event.getError()).thenReturn(empty());
-    message = spy(Message.builder().nullPayload().build());
+    message = spy(Message.of(null));
     when(event.getGroupCorrelation()).thenReturn(mock(GroupCorrelation.class));
     when(event.getMessage()).thenAnswer(invocation -> message);
   }
@@ -106,7 +106,7 @@ public class MessageContextTestCase extends AbstractELTestCase {
 
   @Test
   public void assignPayload() throws Exception {
-    message = Message.builder().payload("").build();
+    message = Message.of("");
     Event.Builder eventBuilder = Event.builder(event);
     evaluate("message.payload = 'foo'", event, eventBuilder);
     assertThat(eventBuilder.build().getMessage().getPayload().getValue(), equalTo("foo"));

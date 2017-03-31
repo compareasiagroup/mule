@@ -6,6 +6,7 @@
  */
 package org.mule;
 
+import static org.mule.runtime.api.message.Message.of;
 import org.mule.runtime.api.message.Message;
 import org.mule.runtime.api.metadata.DataType;
 import org.mule.runtime.api.metadata.MediaType;
@@ -30,7 +31,7 @@ public class MessageBenchmark extends AbstractBenchmark {
 
   @Benchmark
   public Message createMessage() {
-    return Message.builder().payload(PAYLOAD).build();
+    return of(PAYLOAD);
   }
 
   @Benchmark
@@ -144,7 +145,7 @@ public class MessageBenchmark extends AbstractBenchmark {
   }
 
   private Message createMuleMessage() {
-    return Message.builder().payload(PAYLOAD).build();
+    return of(PAYLOAD);
   }
 
   private Message createMuleMessageWithProperties(int numProperties) {

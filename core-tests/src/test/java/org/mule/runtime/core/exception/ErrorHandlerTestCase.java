@@ -59,7 +59,7 @@ public class ErrorHandlerTestCase extends AbstractMuleTestCase {
 
   @Before
   public void before() {
-    when(mockMuleEvent.getMessage()).thenReturn(Message.builder().payload("").build());
+    when(mockMuleEvent.getMessage()).thenReturn(Message.of(""));
     when(mockMuleEvent.getMuleContext()).thenReturn(mockMuleContext);
     Error mockError = mock(Error.class);
     when(mockError.getErrorType()).thenReturn(mockErrorType);

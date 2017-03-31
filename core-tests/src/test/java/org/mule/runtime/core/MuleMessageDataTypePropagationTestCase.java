@@ -19,6 +19,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mule.runtime.api.message.Message.of;
 import static org.mule.runtime.api.metadata.DataType.STRING;
 import static org.mule.runtime.api.metadata.MediaType.ANY;
 import static org.mule.runtime.api.metadata.MediaType.APPLICATION_XML;
@@ -67,7 +68,7 @@ public class MuleMessageDataTypePropagationTestCase extends AbstractMuleTestCase
 
   @Test
   public void defaultEmptyEncodingWithNoProperty() throws Exception {
-    Message message = Message.builder().payload(TEST_PAYLOAD).build();
+    Message message = of(TEST_PAYLOAD);
 
     assertEmptyDataType(message);
   }
@@ -96,14 +97,14 @@ public class MuleMessageDataTypePropagationTestCase extends AbstractMuleTestCase
 
   @Test
   public void updatesDataTypeWhenPayloadIsReplacedWithNullPayload() throws Exception {
-    Message muleMessage = Message.builder().payload(TEST_PAYLOAD).build();
+    Message muleMessage = of(TEST_PAYLOAD);
 
     assertDataType(InternalMessage.builder(muleMessage).nullPayload().build(), Object.class, ANY, null);
   }
 
   @Test
   public void setsNullPayloadWithDataType() throws Exception {
-    Message muleMessage = Message.builder().payload(TEST_PAYLOAD).build();
+    Message muleMessage = of(TEST_PAYLOAD);
 
     assertDataType(InternalMessage.builder(muleMessage).nullPayload().mediaType(APPLICATION_XML_CUSTOM).build(), Object.class,
                    APPLICATION_XML, CUSTOM_ENCODING);
@@ -111,7 +112,7 @@ public class MuleMessageDataTypePropagationTestCase extends AbstractMuleTestCase
 
   @Test
   public void setsPayloadWithDataType() throws Exception {
-    Message muleMessage = Message.builder().payload(TEST_PAYLOAD).build();
+    Message muleMessage = of(TEST_PAYLOAD);
 
     assertDataType(InternalMessage.builder(muleMessage).payload(1).mediaType(APPLICATION_XML_CUSTOM).build(), Integer.class,
                    APPLICATION_XML, CUSTOM_ENCODING);
@@ -170,7 +171,7 @@ public class MuleMessageDataTypePropagationTestCase extends AbstractMuleTestCase
 
   @Test
   public void maintainsCurrentDataTypeClassWhenTransformerOutputTypeIsObject() throws Exception {
-    Message message = Message.builder().payload(TEST_PAYLOAD).build();
+    Message message = of(TEST_PAYLOAD);
 
     Transformer transformer = mock(Transformer.class);
     when(transformer.isSourceDataTypeSupported(any())).thenReturn(true);

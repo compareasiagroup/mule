@@ -95,9 +95,9 @@ public class ForeachTestCase extends AbstractMuleContextTestCase {
   @Test
   public void muleMessageCollectionPayload() throws Exception {
     List<Message> list = new ArrayList<>();
-    list.add(Message.builder().payload("bar").build());
-    list.add(Message.builder().payload("zip").build());
-    Message msgCollection = Message.builder().payload(list).build();
+    list.add(of("bar"));
+    list.add(of("zip"));
+    Message msgCollection = of(list);
     simpleForeach.process(eventBuilder().message(msgCollection).build());
 
     assertSimpleProcessedMessages();
@@ -161,17 +161,17 @@ public class ForeachTestCase extends AbstractMuleContextTestCase {
     List<Message> list1 = new ArrayList<>();
     List<Message> list2 = new ArrayList<>();
 
-    list1.add(Message.builder().payload("a1").build());
-    list1.add(Message.builder().payload("a2").build());
-    list1.add(Message.builder().payload("a3").build());
+    list1.add(of("a1"));
+    list1.add(of("a2"));
+    list1.add(of("a3"));
 
-    list2.add(Message.builder().payload("b1").build());
-    list2.add(Message.builder().payload("b2").build());
-    list2.add(Message.builder().payload("c1").build());
+    list2.add(of("b1"));
+    list2.add(of("b2"));
+    list2.add(of("c1"));
 
-    parentList.add(Message.builder().payload(list1).build());
-    parentList.add(Message.builder().payload(list2).build());
-    Message parentCollection = Message.builder().payload(parentList).build();
+    parentList.add(of(list1));
+    parentList.add(of(list2));
+    Message parentCollection = of(parentList);
 
     nestedForeach.process(eventBuilder().message(parentCollection).build());
     assertNestedProcessedMessages();

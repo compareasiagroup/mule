@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mule.runtime.api.message.Message.of;
 import static org.mule.runtime.core.api.construct.Flow.builder;
 import static org.mule.runtime.core.api.lifecycle.LifecycleUtils.stopIfNeeded;
 import static org.mule.runtime.core.api.processor.MessageProcessors.newChain;
@@ -768,9 +769,7 @@ public class DefaultMessageProcessorChainTestCase extends AbstractReactiveProces
 
     @Override
     public Event process(Event event) throws MuleException {
-      return Event.builder(event)
-          .message(Message.builder().payload(event.getMessage().getPayload().getValue() + "MessageProcessor").build())
-          .build();
+      return Event.builder(event).message(of(event.getMessage().getPayload().getValue() + "MessageProcessor")).build();
     }
   }
 
@@ -779,9 +778,7 @@ public class DefaultMessageProcessorChainTestCase extends AbstractReactiveProces
     @Override
     public Event process(Event event) throws MuleException {
       return processNext(Event.builder(event)
-          .message(Message.builder().payload(event.getMessage().getPayload().getValue() + "InterceptingMessageProcessor")
-              .build())
-          .build());
+          .message(of(event.getMessage().getPayload().getValue() + "InterceptingMessageProcessor")).build());
     }
   }
 
@@ -838,8 +835,7 @@ public class DefaultMessageProcessorChainTestCase extends AbstractReactiveProces
 
     private Event innerProcess(Event event) {
       this.event = event;
-      Event result = Event.builder(event)
-          .message(Message.builder().payload(event.getMessage().getPayload().getValue() + appendString).build()).build();
+      Event result = Event.builder(event).message(of(event.getMessage().getPayload().getValue() + appendString)).build();
       this.resultEvent = result;
       return result;
     }
@@ -932,17 +928,11 @@ public class DefaultMessageProcessorChainTestCase extends AbstractReactiveProces
     }
 
     private Event appendAfter(Event after) {
-      return Event.builder(after)
-          .message(Message.builder().payload(after.getMessage().getPayload().getValue() + "after" + appendString)
-              .build())
-          .build();
+      return Event.builder(after).message(of(after.getMessage().getPayload().getValue() + "after" + appendString)).build();
     }
 
     private Event appendBefore(Event before) {
-      return Event.builder(before)
-          .message(Message.builder().payload(before.getMessage().getPayload().getValue() + "before" + appendString)
-              .build())
-          .build();
+      return Event.builder(before).message(of(before.getMessage().getPayload().getValue() + "before" + appendString)).build();
     }
 
     @Override
@@ -1024,7 +1014,7 @@ public class DefaultMessageProcessorChainTestCase extends AbstractReactiveProces
   protected Event getTestEventUsingFlow(Object data) {
     Event event = mock(Event.class);
     EventContext eventContext = DefaultEventContext.create(flow, "");
-    Message message = Message.builder().payload(data).build();
+    Message message = of(data);
     when(event.getFlowCallStack()).thenReturn(new DefaultFlowCallStack());
     when(event.getMessage()).thenReturn(message);
     when(event.getSession()).thenReturn(mock(MuleSession.class));

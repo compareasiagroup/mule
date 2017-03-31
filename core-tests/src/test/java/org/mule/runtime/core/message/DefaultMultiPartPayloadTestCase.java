@@ -15,6 +15,7 @@ import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.IsCollectionContaining.hasItem;
 import static org.junit.Assert.assertThat;
+import static org.mule.runtime.api.message.Message.of;
 import static org.mule.runtime.core.api.Event.setCurrentEvent;
 import static org.mule.runtime.core.message.DefaultMultiPartPayload.BODY_ATTRIBUTES;
 import static org.mule.runtime.core.util.IOUtils.getResourceAsUrl;
@@ -96,7 +97,7 @@ public class DefaultMultiPartPayloadTestCase extends AbstractMuleContextTestCase
 
     final Message bodyPart = Message.builder().payload(TEST_PAYLOAD).attributes(BODY_ATTRIBUTES).build();
 
-    Message message = Message.builder().payload(new DefaultMultiPartPayload(bodyPart, attachmentPart)).build();
+    Message message = of(new DefaultMultiPartPayload(bodyPart, attachmentPart));
 
     assertThat(((DefaultMultiPartPayload) message.getPayload().getValue()).hasBodyPart(), is(true));
     assertThat(((DefaultMultiPartPayload) message.getPayload().getValue()).getBodyPart(), sameInstance(bodyPart));
@@ -109,7 +110,7 @@ public class DefaultMultiPartPayloadTestCase extends AbstractMuleContextTestCase
     final Message attachmentPart2 = Message.builder().payload("this is the attachment2").mediaType(MediaType.TEXT)
         .attributes(new PartAttributes("attachment2")).build();
 
-    Message message = Message.builder().payload(new DefaultMultiPartPayload(attachmentPart1, attachmentPart2)).build();
+    Message message = of(new DefaultMultiPartPayload(attachmentPart1, attachmentPart2));
 
     assertThat(((DefaultMultiPartPayload) message.getPayload().getValue()).hasBodyPart(), is(false));
   }
@@ -224,7 +225,7 @@ public class DefaultMultiPartPayloadTestCase extends AbstractMuleContextTestCase
 
     expected.expect(IllegalArgumentException.class);
 
-    new DefaultMultiPartPayload(Message.builder().payload(TEST_PAYLOAD).build(), attachmentPart);
+    new DefaultMultiPartPayload(of(TEST_PAYLOAD), attachmentPart);
   }
 
 }

@@ -31,7 +31,7 @@ public class ExceptionTypeFilterTestCase extends AbstractMuleTestCase {
   public void testExceptionTypeFilterMessage() {
     ExceptionTypeFilter filter = new ExceptionTypeFilter();
     assertThat(filter.getExpectedType(), nullValue());
-    Message m = Message.builder().payload("test").build();
+    Message m = Message.of("test");
     assertThat(filter.accept(m, mock(Event.Builder.class)), is(false));
 
     m = InternalMessage.builder(m).exceptionPayload(new DefaultExceptionPayload(new IllegalArgumentException("test"))).build();
@@ -48,7 +48,7 @@ public class ExceptionTypeFilterTestCase extends AbstractMuleTestCase {
     Event event = mock(Event.class);
     ExceptionTypeFilter filter = new ExceptionTypeFilter();
     assertThat(filter.getExpectedType(), nullValue());
-    Message m = Message.builder().payload("test").build();
+    Message m = Message.of("test");
     assertThat(filter.accept(m, mock(Event.Builder.class)), is(false));
 
     Exception exception = new IllegalArgumentException("test");

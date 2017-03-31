@@ -47,9 +47,9 @@ public class AggregatorTestCase extends AbstractMuleContextTestCase {
 
     EventContext context = DefaultEventContext.create(flow, TEST_CONNECTOR, "foo");
 
-    Message message1 = Message.builder().payload("test event A").build();
-    Message message2 = Message.builder().payload("test event B").build();
-    Message message3 = Message.builder().payload("test event C").build();
+    Message message1 = Message.of("test event A");
+    Message message2 = Message.of("test event B");
+    Message message3 = Message.of("test event C");
 
     Event event1 = Event.builder(context).message(message1).flow(flow).session(session).build();
     Event event2 = Event.builder(context).message(message2).flow(flow).session(session).build();
@@ -115,8 +115,7 @@ public class AggregatorTestCase extends AbstractMuleContextTestCase {
             throw new AggregationException(events, next, e);
           }
 
-          return Event.builder(events.getMessageCollectionEvent())
-              .message(Message.builder().payload(newPayload.toString()).build()).build();
+          return Event.builder(events.getMessageCollectionEvent()).message(Message.of(newPayload.toString())).build();
         }
       };
     }

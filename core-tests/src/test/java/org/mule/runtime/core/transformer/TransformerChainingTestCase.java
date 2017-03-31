@@ -40,7 +40,7 @@ public class TransformerChainingTestCase extends AbstractMuleContextTestCase {
     AbstractTransformer validTransformer = (AbstractTransformer) this.getIncreaseByOneTransformer();
     assertNotNull(validTransformer);
 
-    Message message = Message.builder().payload(new Integer(0)).build();
+    Message message = of(new Integer(0));
     Transformer messageTransformer = new TransformerChain(validTransformer);
     message = transformationService.applyTransformers(message, eventBuilder().message(of(0)).build(),
                                                       messageTransformer);
@@ -55,7 +55,7 @@ public class TransformerChainingTestCase extends AbstractMuleContextTestCase {
     AbstractTransformer validTransformer = (AbstractTransformer) this.getIncreaseByOneTransformer();
     assertNotNull(validTransformer);
 
-    Message message = Message.builder().payload(new Integer(0)).build();
+    Message message = of(new Integer(0));
     Transformer messageTransformer = new TransformerChain(validTransformer, validTransformer);
     message = transformationService.applyTransformers(message, eventBuilder().message(of(0)).build(),
                                                       singletonList(messageTransformer));
@@ -70,7 +70,7 @@ public class TransformerChainingTestCase extends AbstractMuleContextTestCase {
     AbstractTransformer validTransformer = (AbstractTransformer) this.getIncreaseByOneTransformer();
     assertNotNull(validTransformer);
 
-    Message message = Message.builder().payload(new Integer(0)).build();
+    Message message = of(new Integer(0));
     Transformer messageTransformer = new TransformerChain(validTransformer, validTransformer, validTransformer);
     message = transformationService.applyTransformers(message, eventBuilder().message(of(0)).build(),
                                                       messageTransformer);
@@ -89,7 +89,7 @@ public class TransformerChainingTestCase extends AbstractMuleContextTestCase {
     AbstractTransformer validTransformer = (AbstractTransformer) this.getIncreaseByOneTransformer();
     assertNotNull(validTransformer);
 
-    Message message = Message.builder().payload(new Integer(0)).build();
+    Message message = of(new Integer(0));
     Transformer messageTransformer = new TransformerChain(invalidTransformer, validTransformer);
     transformationService.applyTransformers(message, eventBuilder().message(of(0)).build(), messageTransformer);
   }
@@ -103,7 +103,7 @@ public class TransformerChainingTestCase extends AbstractMuleContextTestCase {
     AbstractTransformer validTransformer = (AbstractTransformer) this.getIncreaseByOneTransformer();
     assertNotNull(validTransformer);
 
-    Message message = Message.builder().payload(new Integer(0)).build();
+    Message message = of(new Integer(0));
     Transformer messageTransformer = new TransformerChain(invalidTransformer, validTransformer);
 
     try {
@@ -123,7 +123,7 @@ public class TransformerChainingTestCase extends AbstractMuleContextTestCase {
     AbstractTransformer validTransformer = (AbstractTransformer) this.getIncreaseByOneTransformer();
     assertNotNull(validTransformer);
 
-    Message message = Message.builder().payload(new Integer(0)).build();
+    Message message = of(new Integer(0));
     Transformer messageTransformer = new TransformerChain(validTransformer, invalidTransformer);
 
     try {

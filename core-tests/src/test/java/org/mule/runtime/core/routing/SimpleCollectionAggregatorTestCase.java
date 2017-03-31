@@ -52,9 +52,9 @@ public class SimpleCollectionAggregatorTestCase extends AbstractMuleContextTestC
 
     EventContext executionContext = DefaultEventContext.create(flow, TEST_CONNECTOR, "foo");
 
-    Message message1 = Message.builder().payload("test event A").build();
-    Message message2 = Message.builder().payload("test event B").build();
-    Message message3 = Message.builder().payload("test event C").build();
+    Message message1 = Message.of("test event A");
+    Message message2 = Message.of("test event B");
+    Message message3 = Message.of("test event C");
 
     Event event1 =
         Event.builder(executionContext).message(message1).groupCorrelation(new GroupCorrelation(3, null)).flow(flow).build();
@@ -126,18 +126,18 @@ public class SimpleCollectionAggregatorTestCase extends AbstractMuleContextTestC
 
     EventContext executionContext = DefaultEventContext.create(flow, TEST_CONNECTOR, "foo");
 
-    Message message1 = Message.builder().payload("test event A").build();
-    Message message2 = Message.builder().payload("test event B").build();
-    Message message3 = Message.builder().payload("test event C").build();
-    Message message4 = Message.builder().payload("test event D").build();
+    Message message1 = of("test event A");
+    Message message2 = of("test event B");
+    Message message3 = of("test event C");
+    Message message4 = of("test event D");
     List<Message> list = new ArrayList<>();
     List<Message> list2 = new ArrayList<>();
     list.add(message1);
     list.add(message2);
     list2.add(message3);
     list2.add(message4);
-    Message messageCollection1 = Message.builder().payload(list).build();
-    Message messageCollection2 = Message.builder().payload(list2).build();
+    Message messageCollection1 = Message.of(list);
+    Message messageCollection2 = Message.of(list2);
 
     Event event1 =
         Event.builder(executionContext).message(messageCollection1).groupCorrelation(new GroupCorrelation(2, null)).flow(flow)

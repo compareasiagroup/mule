@@ -70,7 +70,7 @@ public class AbstractDynamicRoundRobinTestCase extends AbstractMuleContextTestCa
   }
 
   protected Event getEventWithId(String id) throws Exception {
-    return eventBuilder().message(Message.builder().payload(TEST_MESSAGE).build())
+    return eventBuilder().message(Message.of(TEST_MESSAGE))
         .addVariable(ID_PROPERTY_NAME, id).build();
   }
 

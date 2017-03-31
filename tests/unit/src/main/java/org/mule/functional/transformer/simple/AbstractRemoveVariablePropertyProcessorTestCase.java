@@ -11,6 +11,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mule.runtime.api.message.Message.of;
 import static org.mule.runtime.api.metadata.DataType.OBJECT;
 import static org.mule.runtime.api.metadata.DataType.STRING;
 import org.mule.runtime.api.exception.MuleException;
@@ -62,7 +63,7 @@ public abstract class AbstractRemoveVariablePropertyProcessorTestCase extends Ab
 
   @Before
   public void setUpTest() throws Exception {
-    message = Message.builder().payload("").build();
+    message = of("");
     event = eventBuilder().message(message).session(mockSession).build();
 
     when(mockMuleContext.getConfiguration()).thenReturn(mock(MuleConfiguration.class));

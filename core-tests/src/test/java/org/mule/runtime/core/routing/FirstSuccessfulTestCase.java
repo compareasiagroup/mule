@@ -104,7 +104,7 @@ public class FirstSuccessfulTestCase extends AbstractMuleContextTestCase {
   }
 
   private String getPayload(Processor mp, MuleSession session, String message) throws Exception {
-    Message msg = Message.builder().payload(message).build();
+    Message msg = of(message);
     try {
       Event event = mp.process(eventBuilder().message(msg).session(session).build());
       Message returnedMessage = event.getMessage();
@@ -139,7 +139,7 @@ public class FirstSuccessfulTestCase extends AbstractMuleContextTestCase {
           error = createErrorMock(exception);
           msg = InternalMessage.builder().nullPayload().exceptionPayload(new DefaultExceptionPayload(exception)).build();
         } else {
-          msg = Message.builder().payload("No " + rejectIfMatches).build();
+          msg = of("No " + rejectIfMatches);
         }
         Event muleEvent = eventBuilder().message(msg).error(error).build();
         return muleEvent;

@@ -8,12 +8,12 @@ package org.mule.runtime.core.policy;
 
 import static java.util.Collections.emptyList;
 import static org.mule.runtime.api.i18n.I18nMessageFactory.createStaticMessage;
+import static org.mule.runtime.api.message.Message.of;
 import static org.mule.runtime.core.api.functional.Either.right;
 import org.mule.runtime.api.component.ComponentIdentifier;
 import org.mule.runtime.api.exception.MuleRuntimeException;
 import org.mule.runtime.api.lifecycle.Initialisable;
 import org.mule.runtime.api.lifecycle.InitialisationException;
-import org.mule.runtime.api.message.Message;
 import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.MuleContext;
 import org.mule.runtime.core.api.functional.Either;
@@ -68,7 +68,7 @@ public class DefaultPolicyManager implements PolicyManager, Initialisable {
           // TODO MULE-11141 - This is the case of a filtered flow. This will eventually go away.
           if (flowExecutionResult == null) {
             flowExecutionResult =
-                Event.builder(sourceEvent).message(Message.builder().nullPayload().build()).build();
+                Event.builder(sourceEvent).message(of(null)).build();
           }
 
           return right(new SuccessSourcePolicyResult(flowExecutionResult,

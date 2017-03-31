@@ -6,7 +6,7 @@
  */
 package org.mule.runtime.core.routing.correlation;
 
-import org.mule.runtime.api.message.Message;
+import static org.mule.runtime.api.message.Message.of;
 import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.MuleContext;
 import org.mule.runtime.core.api.store.ObjectStoreException;
@@ -53,7 +53,7 @@ public class ResequenceCorrelatorCallback extends CollectionCorrelatorCallback {
     Arrays.sort(results, eventComparator);
     // This is a bit of a hack since we wrap the the collection of events in a
     // Mule Message to pass back
-    return Event.builder(results[0]).message(Message.builder().payload(results).build()).build();
+    return Event.builder(results[0]).message(of(results)).build();
   }
 
 }

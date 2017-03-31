@@ -48,6 +48,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mule.functional.services.TestServicesUtils.buildSchedulerServiceFile;
+import static org.mule.runtime.api.message.Message.of;
 import static org.mule.runtime.container.api.MuleFoldersUtil.CONTAINER_APP_PLUGINS;
 import static org.mule.runtime.container.api.MuleFoldersUtil.getAppConfigFolderPath;
 import static org.mule.runtime.container.api.MuleFoldersUtil.getContainerAppPluginsFolder;
@@ -3933,7 +3934,7 @@ public class DeploymentServiceTestCase extends AbstractMuleTestCase {
   private void executeApplicationFlow(String flowName) throws MuleException {
     Flow mainFlow =
         (Flow) deploymentService.getApplications().get(0).getMuleContext().getRegistry().lookupFlowConstruct(flowName);
-    Message muleMessage = Message.builder().payload(TEST_MESSAGE).build();
+    Message muleMessage = of(TEST_MESSAGE);
 
     mainFlow.process(Event.builder(DefaultEventContext.create(mainFlow, TEST_CONNECTOR))
         .message(muleMessage)

@@ -94,7 +94,7 @@ public class RegExFilterTestCase extends AbstractMuleContextTestCase {
     RegExFilter filter = new RegExFilter("The quick (.*)");
     filter.setMuleContext(muleContext);
     assertNotNull(filter.getPattern());
-    Message message = Message.builder().payload("The quick brown fox").build();
+    Message message = of("The quick brown fox");
     assertTrue(filter.accept(message, mock(Event.Builder.class)));
   }
 
@@ -166,7 +166,7 @@ public class RegExFilterTestCase extends AbstractMuleContextTestCase {
   public void matchesValueFromMelPayload() throws InitialisationException {
     regExWithValue.setValue("#[mel:payload]");
     regExWithValue.initialise();
-    Message muleMessage = Message.builder().payload("run with the mules").build();
+    Message muleMessage = of("run with the mules");
     assertThat(regExWithValue.accept(muleMessage, mock(Event.Builder.class)), is(true));
   }
 
@@ -174,7 +174,7 @@ public class RegExFilterTestCase extends AbstractMuleContextTestCase {
   public void notMatchesValueFromMelPayload() throws InitialisationException {
     regExWithValue.setValue("#[mel:payload]");
     regExWithValue.initialise();
-    Message muleMessage = Message.builder().payload("run with the zebras").build();
+    Message muleMessage = of("run with the zebras");
     assertThat(regExWithValue.accept(muleMessage, mock(Event.Builder.class)), is(false));
   }
 
@@ -190,7 +190,7 @@ public class RegExFilterTestCase extends AbstractMuleContextTestCase {
   public void matchesPlainTextValue() throws InitialisationException {
     regExWithValue.setValue("run with the mules");
     regExWithValue.initialise();
-    Message muleMessage = Message.builder().payload("").build();
+    Message muleMessage = of("");
     assertThat(regExWithValue.accept(muleMessage, mock(Event.Builder.class)), is(true));
   }
 

@@ -6,6 +6,7 @@
  */
 package org.mule.runtime.core.transformer;
 
+import static org.mule.runtime.api.message.Message.of;
 import static org.mule.runtime.core.DefaultEventContext.create;
 
 import org.mule.runtime.api.i18n.I18nMessage;
@@ -109,7 +110,7 @@ public abstract class AbstractMessageTransformer extends AbstractTransformer imp
       event = (Event) src;
       message = event.getMessage();
     } else if (muleContext.getConfiguration().isAutoWrapMessageAwareTransform()) {
-      message = Message.builder().payload(src).build();
+      message = of(src);
     } else {
       if (event == null) {
         throw new MessageTransformerException(CoreMessages.noCurrentEventForTransformer(), this);

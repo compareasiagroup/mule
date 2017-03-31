@@ -36,7 +36,7 @@ public class CombineCollectionsTransformerTestCase extends AbstractMuleContextTe
   public void testMuleMessageCollectionMerge() throws Exception {
     List list = new ArrayList<>();
     list.add(Message.builder().collectionPayload(new String[] {"1", "2", "3"}).build());
-    list.add(Message.builder().payload("4").build());
+    list.add(Message.of("4"));
     list.add(Message.builder().collectionPayload(new String[] {"5", "6", "7"}).build());
     Message collection = Message.builder().collectionPayload(list, InternalMessage.class).build();
 

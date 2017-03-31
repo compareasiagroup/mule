@@ -12,7 +12,7 @@ import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import org.mule.runtime.api.message.Message;
+import static org.mule.runtime.api.message.Message.of;
 import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.MuleContext;
 import org.mule.runtime.core.api.construct.FlowConstruct;
@@ -67,7 +67,7 @@ public class TransactionalExecutionTemplateTestCase extends AbstractMuleTestCase
 
   @Before
   public void prepareEvent() {
-    when(mockEvent.getMessage()).thenReturn(Message.builder().payload("").build());
+    when(mockEvent.getMessage()).thenReturn(of(""));
   }
 
   @Before

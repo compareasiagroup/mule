@@ -6,6 +6,7 @@
  */
 package org.mule.runtime.core.policy;
 
+import static org.mule.runtime.api.message.Message.of;
 import static org.mule.runtime.core.api.functional.Either.left;
 import static org.mule.runtime.core.api.functional.Either.right;
 import org.mule.runtime.api.exception.MuleException;
@@ -139,7 +140,7 @@ public class CompositeSourcePolicy extends
       Map<String, Object> responseParameters =
           getParametersTransformer()
               .map(parametersTransformer -> concatMaps(originalFailureResponseParameters, parametersTransformer
-                  .fromMessageToErrorResponseParameters(Message.builder().nullPayload().build())))
+                  .fromMessageToErrorResponseParameters(of(null))))
               .orElse(originalFailureResponseParameters);
       return left(new FailureSourcePolicyResult(e, responseParameters));
     }
